@@ -1,0 +1,34 @@
+{
+    "title": "Lavazza Coffee",
+    "company": "Lavazza",
+    "claims": [
+        {
+            "claim_text": "Organic Coffee Beans",
+            "category": "NATURALNESS_CLAIM",
+            "risk_level": "LOW",
+            "reason": "May be a natural ingredient claim subject to verification under UCPD",
+            "regulation": "None"
+        },
+        {
+            "claim_text": "100% Arabica",
+            "category": "FREE_FROM_CLAIM",
+            "risk_level": "MEDIUM",
+            "reason": "May indicate the absence of other ingredients, subject to verification under UCPD",
+            "regulation": "None"
+        },
+        {
+            "claim_text": "Bio-Organic",
+            "category": "ORIGIN_CLAIM",
+            "risk_level": "LOW",
+            "reason": "May be an origin claim subject to verification under UCPD",
+            "regulation": "UCPD 2005/29/EC"
+        },
+        {
+            "claim_text": "For Planet",
+            "category": "ENVIRONMENTAL_CLAIM",
+            "risk_level": "LOW",
+            "reason": "May be an environmental claim subject to verification under UCPD",
+            "regulation": "None"
+        }
+    ]
+}

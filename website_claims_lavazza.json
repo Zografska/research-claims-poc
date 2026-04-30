@@ -1,0 +1,27 @@
+{
+  "title": "Caff\u00e8 biologico in grani",
+  "company": "Lavazza",
+  "claims": [
+    {
+      "claim_text": "\u00c9 una pregiata selezione di Arabica biologica raccolta a mano.",
+      "category": "ORIGIN_CLAIM",
+      "risk_level": "HIGH",
+      "reason": "Lack of transparency on sourcing and production methods",
+      "regulation": "UCPD 2005/29/EC"
+    },
+    {
+      "claim_text": "\u00d1 una miscela delicata e fruttata con una forte persistenza nel tempo.",
+      "category": "NATURALNESS_CLAIM",
+      "risk_level": "LOW",
+      "reason": "No clear indication of natural ingredients or lack thereof",
+      "regulation": "None"
+    },
+    {
+      "claim_text": "\u00d8 15% sul prezzo di listino.",
+      "category": "FREE_FROM_CLAIM",
+      "risk_level": "LOW",
+      "reason": "Promotion as a value-for-money offer may be misleading",
+      "regulation": "UCPD 2005/29/EC"
+    }
+  ]
+}

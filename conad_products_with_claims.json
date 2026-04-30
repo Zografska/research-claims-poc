@@ -1,0 +1,528 @@
+[
+  {
+    "ean": "8003170102699",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Sosteniamo il futuro\n                          \n Vaschetta e Film - 7 - Raccolta Plastica\n                          \n Verifica le regole del tuo comune e scopri di più su www.conad.it Denominazione di vendita Formaggio Emmentaler svizzero Marchio CONAD Conservazione Conservazione: Conservare in frigorifero da 0°C a   4°C. Prodotto confezionato in atmosfera protettiva: non forare la confezione. Paese di origine Bollo CE: IT S2Q20 UE Formaggio Emmentaler svizzero Produttori Indirizzo produttori Prodotto per Conad S.C. Via Michelino, 59 Bologna da M&C S.r.l. nello stabilimento A.S.I. Pascarola-Caivano (NA) Ingredienti e valori nutrizionali Ingredienti <Latte> Fermenti lattici Sale Caglio Valori nutrizionali Valori medi per 100g di prodotto Energia 1660kJ 400kcal Grassi 32g di cui: - Acidi grassi saturi 20g Carboidrati 0g di cui: - Zuccheri 0g Fibre 0g Proteine 28g Sale 1,0g Allergeni Contiene: Latte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "Sosteniamo il futuro",
+          "category": "NATURALNESS_CLAIM | SUSTAINABILITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "implies a commitment to sustainability, but lacks concrete evidence",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Formaggio Emmentaler svizzero",
+          "category": "ORIGIN_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "clear origin claim, but no additional substantiation needed",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "PDO/PGI/TSG Regulation 1151/2012"
+        },
+        {
+          "claim_text": "Prodotto confezionato in atmosfera protettiva: non forare la confezione",
+          "category": "FREE_FROM_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "implies a natural or protected packaging, but lacks concrete evidence",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Conservazione: Conservare in frigorifero da 0°C a   4°C",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "clear origin claim and natural handling instructions, but no additional substantiation needed",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Importante: tutti i prodotti venduti sfusi, porzionati e/o preparati... potrebbero essere soggetti a possibili contaminazioni crociate",
+          "category": "NATURALNESS_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "implies a risk of cross-contamination, but lacks concrete evidence",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Formaggi e latticini che contengono latte crude non sono adatti a persone vulnerabili come soggetti immunodepressi, anziani, donne in gravidanza o bambini sott'età di 10 anni",
+          "category": "HEALTH_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "HIGH",
+          "risk_rationale": "clear health claim with a risk of harm to vulnerable groups, but lacks concrete evidence",
+          "ucpd_article": "Art.7 misleading omissions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        }
+      ],
+      "badge_claims": []
+    }
+  },
+  {
+    "ean": "8003170054448",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione L' Asiago Formaggio DOP 300 g Conad è a tua disposizione, a un prezzo vantaggioso, nel nostro catalogo digitale. Approfittane! Preparato con latte vaccino italiano , secondo gli standard qualitativi certificati dalla Denominazione di Origine Protetta , l'Asiago DOP 300 g Conad ti conquisterà con il suo sapore delicato e con la deliziosa scioglievolezza. Ottenuto con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera, è un prodotto di qualità. Perfetto per un pranzo veloce con un'insalata mista, e ideale per imbottire i sandwich da portare al parco o al lavoro, fonde che è una meraviglia ed è l'ingrediente giusto per tante ricette. Se si sposa divinamente con le patate e con lo speck, con le pere e con le noci, è super versatile e va d'accordo con moltissimi ingredienti in cucina. Provalo per la polenta concia , per condire i paccheri e gli gnocchi, per rendere irresistibilmente cremoso il risotto allo zafferano, per farcire le patate al cartoccio e gli involtini di vitello, i fagottini di pasta sfoglia e il polpettone, per i finocchi gratinati e per tante preparazioni al forno con cui deliziare tutti gli ospiti alla tua tavola. Per gli antipasti e per i contorni, per i primi e i secondi piatti, per le torte salate e per le tartine, per la fonduta e per la zuppa, per la pizza fatta in casa, conta sull'Asiago Formaggio DOP 300 g Conad. Confezionato in atmosfera protettiva, si caratterizza anche per il rapporto eccellente fra la qualità e il prezzo . Tra i formaggi confezionati a marchio Conad, l'Asiago non poteva certamente mancare. Può forse mancare nel tuo frigo?! Eccellente formaggio a pasta semicotta tipico del Veneto e prodotto fin dall'anno Mille, l'Asiago fresco DOP è sempre disponibile nei nostri punti vendita, e ti aspetta anche online sugli scaffali digitali. Mettilo subito nel carrello! Conad per l'ambiente                           Incarto - Raccolta Plastica                           Verifica le regole del tuo comune e scopri di più su www.conad.it Denominazione di vendita Asiago fresco DOP Marchio CONAD Conservazione Conservazione: conservare in frigorifero da  4°C a  8°C. Prodotto confezionato in atmosfera protettiva. Non forare la confezione. Paese di origine Italia / Prodotto Italiano Certificazioni Produttori Indirizzo produttori Confezionato per Conad S.C. Via Michelino, 59 Bologna da Latterie Vicentine S.c.a. nello stabilimento di Bressanvido (VI) Via San Benedetto,19 Ingredienti e valori nutrizionali Ingredienti <Latte> Sale Caglio Fermenti lattici Crosta non edibile, trattata in superficie con conservanti: natamicina e sorbato di potassio Valori nutrizionali Valori medi per 100g di prodotto Valore energetico 1518kJ/ 366kcal Grassi 30g di cui: - Acidi grassi saturi 21g Carboidrati 0g di cui: - Zuccheri 0g Fibre 0g Proteine 24g Sale 1,7g Sodio 0,68 g Allergeni Contiene: Latte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "Preparato con latte vaccino italiano",
+          "category": "HEALTH_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'natural', 'traditional', 'artisanal')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "Obttenuto con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera",
+          "category": "NATURALNESS_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. DOP)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Prodotto di qualità",
+          "category": "QUALITY_CLAIM | ABSOLUTE_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'superior quality', 'best')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Perfetto per un pranzo veloce con un'insalata mista, e ideale per imbottire i sandwich da portare al parco o al lavoro",
+          "category": "COMPARATIVE_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'superior quality', 'best')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Super versatile e va d'accordo con moltissimi ingredienti in cucina",
+          "category": "NATURALNESS_CLAIM | ABSOLUTE_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'natural', 'traditional', 'artisanal')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Confezionato in atmosfera protettiva, si caratterizza anche per il rapporto eccellente fra la qualità e il prezzo",
+          "category": "ENVIRONMENTAL_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'eco-friendly', 'sustainable')",
+          "ucpd_article": "Art.8-9 aggressive practices",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Prodotto confezionato in atmosfera protettiva",
+          "category": "ENVIRONMENTAL_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. DOP)",
+          "ucpd_article": "Art.8-9 aggressive practices",
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        },
+        {
+          "claim_text": "Marchio CONAD",
+          "category": "PDO/PGI/TSG Regulation 1151/2012",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. DOP)",
+          "ucpd_article": "",
+          "regulation": "PDO/PGI/TSG Regulation 1151/2012"
+        }
+      ],
+      "badge_claims": [
+        {
+          "claim_text": "Denominazione di Origine Protetta",
+          "badge_source": "Denominazione di Origine Protetta",
+          "verifiable": "true",
+          "category": "PDO/PGI/TSG Regulation 1151/2012",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. DOP)",
+          "regulation": "PDO/PGI/TSG Regulation 1151/2012"
+        },
+        {
+          "claim_text": "Conad per l'ambiente",
+          "badge_source": "Conad per l'ambiente",
+          "verifiable": "false",
+          "category": "",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'eco-friendly', 'sustainable')",
+          "regulation": ""
+        }
+      ]
+    }
+  },
+  {
+    "ean": "8000430030181",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione Un formaggio fresco cremoso e dal sapore unico: è Certosa, la crescenza di Galbani che trovi in vendita online nello store di Conad, nella confezione da 165 grammi . Gusta tutta la bontà di un prodotto realizzato con latte italiano al 100% : al naturale o unito a svariate pietanze, ha un sapore che delizierà tutti gli amanti dei latticini freschi! Certosa è la crescenza dal gusto fresco e genuino, realizzata con solo latte lombardo e piemontese, raccolto vicino alla zona di produzione, da filiera certificata, garantita dal latte al prodotto finito. Il formaggio è composto unicamente da latte, enzimi coagulanti del latte e fermenti lattici vivi, ed è senza conservanti . Tienila in frigorifero e assaporala tutte le volte che hai voglia di un cibo morbido e cremoso. Il suo sapore delicato e la sua consistenza ancora più cremosa la rendono ideale per tutti e per tutte le occasioni: puoi consumarla da sola, per insaporire verdure e focacce, o puoi aggiungerla ad altri ingredienti per inventare piatti ricchi e fantasiosi. Certosa è perfetta per un pasto leggero , spalmata su del pane integrale e accompagnata da pomodori freschi o ortaggi grigliati, oppure da un'insalata di fagiolini e patate lessi. Puoi utilizzarla per mantecare il risotto con i funghi o una pasta con salsiccia o salmone affumicato, ma è l'ideale anche per farcire una torta rustica a base di verdure . La crescenza Galbani è perfetta per rendere ancora più cremosa e golosa una piadina con del prosciutto cotto o crudo , da utilizzare come parte del ripieno nei cannelloni, o ancora per preparare delle deliziose melanzane alla parmigiana. Sia che tu la voglia gustare al naturale, sia che desideri utilizzarla per farciture e creme, non dimenticare mai di segnare Certosa crescenza Galbani nella tua lista della spesa online ! 100% italiano Confezione interna - Raccolta plastica\n                          \n Vaschetta - Raccolta plastica\n                          \n Confezione esterna - Raccolta plastica\n                          \n Verifica tutte le indicazioni relative alle diverse componenti nella pagina prodotto Certosa 165g sul sito www.galbani.it Denominazione di vendita Crescenza Marchio GALBANI / CERTOSA Conservazione Conservare a temperatura max  4°C Confezionato in atmosfera protettiva Paese di origine Bollo CE: IT 03 3 UE Luogo di provenienza: Latte Lombardo e Piemontese | Solo latte Lombardo e Piemontese Crescenza italiana | Origine del latte: Italia Italia / Prodotto Italiano Produttori Indirizzo produttori Prodotto da Egidio Galbani s.r.l. Via Togliatti 8 Melzo (MI) nello stabilimento di via Roma, 1/3 Casale Cremasco Vidolasco (CR) Ingredienti e valori nutrizionali Ingredienti <Latte> Sale Enzimi coagulanti del latte Fermenti lattici vivi Senza conservanti Valori nutrizionali Valori medi per 100 g di prodotto VNR* Energia 1135 kJ / 274 kcal Grassi 24 g di cui Acidi grassi saturi 16 g Carboidrati 2,5 g di cui zuccheri 2,0 g Proteine 12 g Sale 0,80 g Calcio 350 mg 44% Fosforo 230 mg 33% Vit. B12 0,620 µg 25% *VNR = Valori nutritivi di riferimento Allergeni Contiene: Latte Additivi Senza conservanti Informazioni aggiuntive Con calcio Con vitamine aggiunte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": null
+  },
+  {
+    "ean": "80128908",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione La Crescenza 100 g Conad è in vendita in ogni negozio e anche online. Il peso sulla bilancia non è più l'unica cosa da controllare! Ottenuta solo da latte italiano e priva di conservanti , la crescenza 100 g Conad è un prodotto caseario che non dovrebbe mancare nel frigorifero. Non solo perché è tra i pochi formaggi magri (assieme a ricotta, mozzarella, stracchino e primo sale), ma anche perché la crescenza 100 g Conad è una buona abitudine per tutti ! Perché è gustosa e perché entra, con passo leggero ma deciso, nella preparazione di tante ricette dolci e salate. Deliziosa spalmata su pane, abbinata a composte e marmellate, con pomodoro e basilico o in insalate ricche e sfiziose, la crescenza 100 g Conad diventa l'ingrediente che fa la differenza in primi, secondi e dessert da urlo. Morbido, cremoso e saporito, questo formaggio fresco a pasta molle fa bella figura a tavola da solo o in compagnia , e anche nelle versioni crescenza light e crescenza di capra Conad. Buonissima, la crescenza 100 g Conad è tra i formaggi morbidi italiani più amati . Con l'offerta online Crescenza 100 g Conad, il formaggio cremoso magro, che assolutamente ti consigliamo di provare, si fa amare ancora di più! Conad per l'ambiente                           Incarto - Plastica mista - Raccolta Plastica                           Vaschetta - Plastica - Raccolta Plastica                           Segui sempre le regole del tuo comune e scopri di più su www.conad.it Denominazione di vendita Crescenza formaggio molle da tavola Marchio CONAD Conservazione Conservazione: conservare in frigorifero da 0°C a  4°C. Prodotto confezionato in atmosfera protettiva: non forare la confezione. Paese di origine Latte italiano | Origine del latte: Italia Italia / Prodotto Italiano Produttori Indirizzo produttori Prodotto per Conad S.C. Via Michelino, 59 Bologna da Caseificio Pugliese S.p.A. nello stabilimento di Lauriano (TO) Via Ettore Elia, 10 Ingredienti e valori nutrizionali Ingredienti <Latte> <Panna> Sale Fermenti lattici Caglio Valori nutrizionali Valori medi per 100g di prodotto %NRV* per 100g Valore energetico 1185kJ 286kcal Grassi 25g di cui: - Acidi grassi saturi 18g Carboidrati 2,3g di cui: - Zuccheri 1,7g Fibre 0g Proteine 13g Sale 0,7g Calcio 380mg 48 Fosforo 372mg 53 *NRV = Valori nutrizionali di riferimento giornalieri Allergeni Contiene: Latte Additivi Senza conservanti Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "morbido, cremoso e saporito",
+          "category": "NATURALNESS_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolutes like 'morbido' and 'cremoso' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "buonissima, la crescenza 100 g Conad è tra i formaggi morbidi italiani più amati",
+          "category": "NATURALNESS_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolutes like 'buonissima' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "con l'offerta online Crescenza 100 g Conad, il formaggio cremoso magro, che assolutamente ti consigliamo di provare, si fa amare ancora di più!",
+          "category": "NATURALNESS_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolutes like 'assolutamente' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "tra i pochi formaggi magri (assieme a ricotta, mozzarella, stracchino e primo sale)",
+          "category": "ORIGIN_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolute claim 'pochi formaggi magri' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "buona abitudine per tutti!",
+          "category": "NATURALNESS_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolute claim 'buona abitudine' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "deliziosa spalmata su pane, abbinata a composte e marmellate, con pomodoro e basilico o in insalate ricche e sfiziose",
+          "category": "ORIGIN_CLAIM | COMPARATIVE_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "comparative claim 'riche e sfiziose' is factual and verifiable from product specs",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "morbido, cremoso e saporito, questo formaggio fresco a pasta molle fa bella figura a tavola da solo o in compagnia",
+          "category": "NATURALNESS_CLAIM | QUALITY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "absolute claim 'fa bella figura' could be misleading without substantiation",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Health Claims Regulation 1924/2006"
+        },
+        {
+          "claim_text": "Conad per l'ambiente Incarto - Plastica mista - Raccolta Plastica Vaschetta - Plastica - Raccolta Plastica Segui sempre le regole del tuo comune e scopri di più su www.conad.it",
+          "category": "ENVIRONMENTAL_CLAIM | BADGE_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "environmental claim 'Conad per l'ambiente' is factual and verifiable from product specs",
+          "verifiable": true,
+          "ucpd_article": null,
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        }
+      ],
+      "badge_claims": [
+        {
+          "claim_text": "Conad per l'ambiente",
+          "badge_source": "Conad",
+          "verifiable": true,
+          "category": "ENVIRONMENTAL_CLAIM | BADGE_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "environmental claim 'Conad per l'ambiente' is factual and verifiable from product specs",
+          "ucpd_article": null,
+          "regulation": "EU Green Claims Directive 2024/825/EU"
+        }
+      ]
+    }
+  },
+  {
+    "ean": "8003170078888",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione La Feta DOP 200 g Conad è a tua disposizione, a un prezzo conveniente, nel nostro catalogo digitale. Approfittane! Preparata con latte pastorizzato di capra e di pecora , la Feta DOP della Conad ti conquisterà con il suo sapore tipico, intenso e acidulo. Prodotta in Grecia e certificata con la DOP, è ottenuta con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera. Fondamentale per preparare la classica insalata greca , la feta può essere l'ingrediente giusto per farcire i tuoi sandwich e per sbizzarrirti in fantasiose ricette . Se infatti si sposa con le olive di Kalamata e con la cipolla di Tropea, va però d'accordo con tantissimi ingredienti! Provala per una pasta con i pomodorini o con il tonno! Uniscila alla frittata di zucchine o all'insalata di pollo. Accostala alle fragole, ai pomodori secchi o all'avocado oppure scegli di servirla calda, avendola cotta al forno o alla piastra , per accompagnare qualsiasi verdura. Frullala con cetrioli, cipolla e un po' di formaggio spalmabile, per ridurla a irresistibile crema , in cui sarà un vero piacere intingere il pinzimonio di verdure. Tra le proposte casearie in vendita online nello store di Conad, il Formaggio Feta DOP non poteva certamente mancare. Può forse mancare nel tuo frigorifero? Ricca di calcio e di fermenti lattici , la nostra feta è così buona che la raccomandazione di consumare il prodotto entro tre giorni dopo l'apertura può essere del tutto superflua. Per un pranzo veloce e gustoso, per una cenetta raffinata, per un aperitivo con gli amici e per ogni ricercata evenienza, puoi sicuramente contare sulla bontà e sulla qualità del nostro Formaggio Feta DOP. Nel rammentarti che il calcio è alleato delle ossa , ti ricordiamo che, sempre disponibile nei nostri punti vendita, l'ottimo formaggio Feta DOP 200 g Conad ti aspetta anche online sui nostri scaffali digitali. Metti subito nel carrello! Incarto: Raccolta Plastica                           www.conad.it Denominazione di vendita Formaggio Feta DOP Marchio CONAD Conservazione Conservazione: conservare in frigorifero da 2°C a  6°C. Dopo l'apertura, conservare in frigorifero e consumare entro tre giorni. Paese di origine Prodotto in Grecia Certificazioni Ingredienti e valori nutrizionali Ingredienti <Latte> di pecora pastorizzato <Latte> di capra pastorizzato Sale Fermenti lattici Caglio Grassi su sostanza secca 43% min. Valori nutrizionali Valori nutrizionali medi per 100g di prodotto Valore energetico 1152kJ 278kcal Grassi 23g di cui: - Acidi grassi saturi 16g Carboidrati 0,7g di cui: - Zuccheri 0,7g Fibre 0g Proteine 17g Sale 2,2g Allergeni Contiene: Latte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "La Feta DOP della Conad ti conquisterà con il suo sapore tipico, intenso e acidulo.",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "The claim suggests a unique and intense flavor, which may be perceived as natural or traditional.",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Prodotta in Grecia e certificata con la DOP, è ottenuta con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera.",
+          "category": "ORIGIN_CLAIM | ENVIRONMENTAL_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "The claim provides information about the country of origin and the certification process, which is verifiable.",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Fondamentale per preparare la classica insalata greca , la feta può essere l'ingrediente giusto per farcire i tuoi sandwich e per sbizzarrirti in fantasiose ricette .",
+          "category": "ORIGIN_CLAIM | COMPARATIVE_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "The claim suggests that the product is essential for a specific traditional dish, which may be perceived as superior or comparative.",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Ricca di calcio e di fermenti lattici , la nostra feta è così buona che la raccomandazione di consumare il prodotto entro tre giorni dopo l'apertura può essere del tutto superflua.",
+          "category": "NATURALNESS_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "The claim suggests that the product is rich in nutrients and has a long shelf life, which may be perceived as natural or free from preservatives.",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Per un pranzo veloce e gustoso, per una cenetta raffinata, per un aperitivo con gli amici e per ogni ricercata evenienza, puoi sicuramente contare sulla bontà e sulla qualità del nostro Formaggio Feta DOP.",
+          "category": "QUALITY_CLAIM | ABSOLUTE_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "The claim suggests that the product is of high quality and suitable for various occasions, which may be perceived as absolute or superior.",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Conservare in frigorifero da 2°C a  6°C. Dopo l'apertura, conservare in frigorifero e consumare entro tre giorni.",
+          "category": "FREE_FROM_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "The claim provides information about storage and shelf life, which is verifiable.",
+          "ucpd_article": "Art.7 misleading omissions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Contiene: Latte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti.",
+          "category": "ALLERGENY_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "The claim provides information about allergens and product labeling, which is verifiable.",
+          "ucpd_article": "Art.7 misleading omissions",
+          "regulation": "UCPD 2005/29/EC"
+        }
+      ],
+      "badge_claims": [
+        {
+          "claim_text": "DOP",
+          "badge_source": "Denominazione di protezione d'origine",
+          "verifiable": "true",
+          "category": "ORIGIN_CLAIM | ENVIRONMENTAL_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "The DOP certification is a recognized EU label that provides information about the product's origin and production process.",
+          "regulation": "PDO/PGI/TSG Regulation 1151/2012"
+        }
+      ]
+    }
+  },
+  {
+    "ean": "8003170046535",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione La Crescenza 200 g Conad è a tua disposizione, a un prezzo vantaggioso, nel nostro catalogo digitale. Approfittane! Preparata con latte parzialmente scremato da allevamenti italiani e senza conservanti , la nostra crescenza light è un prodotto di qualità della linea Piacersi Conad , pensata per chi ha esigenze nutrizionali diverse, per chi in generale fa attenzione alla propria linea senza rinunciare al gusto. Cremosa e genuina, la crescenza Conad ha un apporto calorico basso (162 kcal per 100 g di prodotto) ed è a ridotto contenuto di grassi . Ottima da spalmare sui crackers o sul pane tostato, è ideale per un pranzo veloce , per una cena leggera, per imbottire un panino da portare al parco o al lavoro. Particolarmente apprezzata da chi sa che un'alimentazione varia ed equilibrata è importante per mantenersi in buona salute e in forma, piace a tutti per la sua delicatezza. Per un sandwich magro e appetitoso, per farcire una piadina, per un secondo piatto genuino che puoi accompagnare deliziosamente con tutte le verdure che vuoi, per un risotto raffinato e per una deliziosa torta salata, per il brunch e per un apericena improvvisato, puoi sicuramente contare sulla crescenza light Piacersi Conad . Italiana al 100% , è ottenuta con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera. Tra i formaggi spalmabili a pasta molle della gamma completa Piacersi Conad , la crescenza non poteva certamente mancare. Può forse mancare nel tuo frigorifero?! La confezione contiene 2 porzioni da 100 g. Confezionata in atmosfera protettiva, si caratterizza anche per il rapporto eccellente fra la qualità e il prezzo . Sempre disponibile nei nostri punti vendita, la Crescenza 200 g Conad ti aspetta anche online sugli scaffali digitali. Mettila subito nel carrello! Sosteniamo il futuro\n                          \n Incarto esterno - 7 - Raccolta Plastica\n                          \n Vaschetta - PET1 - Raccolta Plastica\n                          \n Incarto interno - C/PAP 81 - Raccolta Carta\n                          \n Verifica le regole del tuo comune e scopri di più su www.conad.it Denominazione di vendita Formaggio molle leggero Marchio PIACERSI CONAD Conservazione Conservazione: conservare in frigorifero da 0°C a  4°C. Prodotto confezionato in atmosfera protettiva: non forare la confezione. Paese di origine Bollo CE: IT 03 121 CE Latte italiano Italia / Prodotto Italiano Produttori Indirizzo produttori Prodotto per Conad S.C. Via Michelino, 59 Bologna Stella Bianca S.r.l. Socio Unico Via Santa Rosa, 5 Ossago Lodigiano (LO) Ingredienti e valori nutrizionali Ingredienti <Latte> parzialmente scremato Fermenti lattici Sale Caglio Valori nutrizionali Valori medi per 100g di prodotto %RI* per 100g Energia 676kJ 8 162kcal Grassi 10g 14 di cui: - Acidi grassi saturi 7,0g 35 Carboidrati 2,0g 1 di cui: - Zuccheri 2,0g 2 Fibre 0g - Proteine 16g 32 Sale 0,75g 13 *RI = Assunzioni di riferimento giornaliere di un adulto medio (8400kJ/2000kcal) Contiene 2 porzioni da 100g Allergeni Contiene: Latte Additivi Senza conservanti Informazioni aggiuntive Ridotto contenuto grassi Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "Preparata con latte parzialmente scremato da allevamenti italiani",
+          "category": "ORIGIN_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'italian' origin without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Food Information Regulation 1169/2011"
+        },
+        {
+          "claim_text": "Senza conservanti",
+          "category": "FREE_FROM_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. 'no preservatives')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Ridotto contenuto di grassi",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'reduced fat' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Food Information Regulation 1169/2011"
+        },
+        {
+          "claim_text": "Ottima da spalmare sui crackers o sul pane tostato",
+          "category": "COMPARATIVE_CLAIM | QUALITY_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is comparative and quality-related, but lacks specific details",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Particolarmente apprezzata da chi sa che un'alimentazione varia ed equilibrata è importante per mantenersi in buona salute e in forma",
+          "category": "QUALITY_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'balanced diet' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Italiana al 100%",
+          "category": "ORIGIN_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. '100% Italian' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Food Information Regulation 1169/2011"
+        },
+        {
+          "claim_text": "Ottenuta con un'accurata selezione delle aziende fornitrici e con rigorosi controlli sulla filiera",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'sustainable production' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Ridotto contenuto di grassi",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'reduced fat' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "EU Food Information Regulation 1169/2011"
+        },
+        {
+          "claim_text": "Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. 'traceability')",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Importante: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate",
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Claim requires evidence that may exist but is not shown (e.g. 'allergen risk' without specific details)",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        }
+      ],
+      "badge_claims": [
+        {
+          "claim_text": "Sosteniamo il futuro",
+          "badge_source": null,
+          "verifiable": false,
+          "category": "NATURALNESS_CLAIM | ORIGIN_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Claim is factual and verifiable from product specs, or is a recognized/certified label (e.g. 'sustainability')",
+          "regulation": "UCPD 2005/29/EC"
+        }
+      ]
+    }
+  },
+  {
+    "ean": "8003170020917",
+    "url": "https://spesaonline.conad.it/p/provolone-valpadana-dop-piccante-250-g-sapori-dintorni-conad--232591",
+    "description": "Caratteristiche Descrizione Il Maasdam Olandese 330 g Conad è disponibile sui nostri scaffali digitali e dovresti approfittarne subito. Originario della città di Maasdam, in Olanda, in patria è un'assoluta star. Ma da diversi anni ormai è cittadino del mondo. Sarà perché matura molto velocemente? O perché, si narra, sia stato sponsorizzato nientepopodimeno che da Pietro il Grande? Com'è come non è, quei caratteristici buchi nel suo impasto (prodotti dai batteri del latte durante la stagionatura) lo hanno reso popolare anche da noi. E fatto entrare in competizione con il celeberrimo Emmental, un altro che di buchi se ne intende. Se per gusto e forma lo ricorda, il Maasdam è più umido e, il che non guasta, più economico . Prodotto con latte vaccino, stagionato per almeno 4 settimane, Maasdam Olandese 330 g Conad si caratterizza per la consistenza semidura ed elastica, per la crosta (non edibile) liscia e gialla, per il sapore dolce e delicato . Ottenuto con un'accurata selezione delle aziende fornitrici e rigorosi controlli aggiuntivi, è un prodotto di qualità . Indicato per tutte le torte salate (con cicoria, con bietole, con asparagi), per la focaccia o per i crostini con pomodorini e origano, è utilissimo in cucina e piace ai grandi e ai piccini. Puoi aggiungerlo agli ingredienti classici della frittata di patate o a quelli della pasta ai formaggi. Scioglierlo sui nachos per l'aperitivo o metterlo in forno tra gli strati succulenti delle lasagne bianche. Provarlo per la ricetta dei saltimbocca di zucchine o adagiarlo semplicemente, con i salumi e gli altri formaggi, su un tagliere per il brunch o per l'apericena. Tra i prodotti caseari a marchio Conad, il formaggio Maasdam olandese non poteva certamente mancare. Può forse mancare nel tuo frigo? Sempre disponibile in negozio, Maasdam Olandese 330 g Conad ti aspetta anche online. Controlla subito sugli scaffali digitali! Conad per l'ambiente                           Incarto - Other 07 - Raccolta Plastica                           Verifica le regole del tuo comune e scopri di più su www.conad.it Denominazione di vendita Formaggio Maasdam olandese Marchio CONAD Conservazione Conservazione: conservare in frigorifero da  1°C a  8°C. Prodotto confezionato in atmosfera protettiva. Non forare la confezione. Una volta aperta la confezione si consiglia di consumare il prodotto entro una settimana. Paese di origine Bollo CE: IT 03 72 CE Maasdam olandese | Paese di mungitura: latte di paesi UE | Paese di trasformazione: Olanda Italia / Prodotto Italiano Produttori Indirizzo produttori Prodotto per Conad S.C. Via Michelino, 59 Bologna da Ferrari Giovanni Industria Casearia S.p.A. nello stabilimento di Ossago Lodigiano (LO) Strada Provinciale, 107 Ingredienti e valori nutrizionali Ingredienti <Latte> Sale Fermenti lattici Caglio Crosta non edibile, trattata in superficie con polimero ceroso addizionato con conservante natamicina Valori nutrizionali Valori medi per 100g di prodotto Energia 1515kJ 365kcal Grassi 29g di cui: - Acidi grassi saturi 21g Carboidrati 0g di cui: - Zuccheri 0g Fibre 0g Proteine 26g Sale 1,4g Allergeni Contiene: Latte Tracciabilità e AVVERTENZE Tutte le indicazioni di Legge per i prodotti preimballati all’origine dai Produttori sono riportate sull’etichetta del prodotto al momento della consegna e visibili nelle immagini a disposizione al momento dell’ordine dei prodotti. Alcune indicazioni su ingredienti e allergeni potrebbero subire variazioni per modifiche apportate dai Produttori, che potrebbero determinare differenze tra le informazioni presenti sul sito e quelle riportate sui prodotti effettivamente consegnati. Prima di procedere quindi al consumo e /o utilizzo dei prodotti, Vi invitiamo a verificare sempre le informazioni riportate sull'etichetta. In particolare, Vi invitiamo a prestare attenzione alle eventuali indicazioni relative agli ALLERGENI quali: grano (tra cui farro e grano khorasan), segale, orzo, avena o i loro ceppi ibridati e prodotti derivati, crostacei, uova, pesce, molluschi, arachidi, soia, latte e prodotti a base di latte (incluso lattosio), frutta a guscio (mandorle, nocciole, noci comuni, noci di acagiù, noci di pecan, noci del Brasile, pistacchi, noci macadamia o noci del Queensland), sedano, senape, semi di sesamo, anidride solforosa e solfiti in concentrazioni superiori a 10 mg/kg (espressi in SO2), lupini. IMPORTANTE: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate durante le manipolazioni. I FORMAGGI E LATTICINI CHE CONTENGONO LATTE CRUDO NON SONO ADATTI A PERSONE VULNERABILI COME SOGGETTI IMMUNODEPRESSI, ANZIANI, DONNE IN GRAVIDANZA O BAMBINI SOTTO I 10 ANNI, AI   QUALI PERTANTO SE NE SCONSIGLIA IL CONSUMO.   VERIFICA SEMPRE LA PRESENZA DELL’INDICAZIONE 'LATTE CRUDO' NELLA LISTA DEGLI INGREDIENTI.",
+    "claims": {
+      "claims": [
+        {
+          "claim_text": "Originario della città di Maasdam, in Olanda",
+          "category": "ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific origin information",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Sponsorizzato da Pietro il Grande",
+          "category": "ORIGIN_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific origin information and unsubstantiated claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Prodotto con latte vaccino",
+          "category": "FREE_FROM_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of dairy-free claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Stagionato per almeno 4 settimane",
+          "category": "NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific information on aging process and unsubstantiated claim",
+          "ucpd_article": "Art.7 misleading omissions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Obttenuto con un'accurata selezione delle aziende fornitrici e rigorosi controlli aggiuntivi",
+          "category": "NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific information on selection process and unsubstantiated claim",
+          "ucpd_article": "Art.7 misleading omissions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Indicato per tutte le torte salate (con cicoria, con bietole, con asparagi), per la focaccia o per i crostini con pomodorini e origano",
+          "category": "ORIGIN_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific information on origin and unsubstantiated claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Prodotto di qualità",
+          "category": "QUALITY_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of quality claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Formaggio Maasdam olandese | Paese di mungitura: latte di paesi UE | Paese di trasformazione: Olanda Italia / Prodotto Italiano",
+          "category": "ORIGIN_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of origin claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Ingredienti <Latte> Sale Fermenti lattici Caglio Crosta non edibile, trattata in superficie con polimero ceroso addizionato con conservante natamicina",
+          "category": "FREE_FROM_CLAIM | NATURALNESS_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of dairy-free and natural claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Prodotto confezionato in atmosfera protettiva. Non forare la confezione.",
+          "category": "NATURALNESS_CLAIM | FREE_FROM_CLAIM",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of natural and dairy-free claim",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        },
+        {
+          "claim_text": "Importante: tutti i prodotti venduti sfusi, porzionati e/o preparati e/o in generale manipolati all’interno dei laboratori del punto di vendita, potrebbero essere soggetti a possibili contaminazioni crociate con le sostanze allergeniche sopra citate",
+          "category": "FREE_FROM_CLAIM | ALLERGENY_CLAIM",
+          "risk_level": "MEDIUM",
+          "risk_rationale": "Lack of specific information on allergen risk and unsubstantiated claim",
+          "ucpd_article": "Art.8-9 aggressive practices",
+          "regulation": "UCPD 2005/29/EC"
+        }
+      ],
+      "badge_claims": [
+        {
+          "claim_text": "Conad per l'ambiente Incarto - Other 07 - Raccolta Plastica Verifica le regole del tuo comune e scopri di più su www.conad.it",
+          "category": "ENVIRONMENTAL_CLAIM | BADGE_LABEL",
+          "risk_level": "LOW",
+          "risk_rationale": "Clear indication of environmental claim and badge label",
+          "ucpd_article": "Art.6 misleading actions",
+          "regulation": "UCPD 2005/29/EC"
+        }
+      ]
+    }
+  }
+]
