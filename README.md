@@ -4,26 +4,40 @@ Scraping pipeline for extracting product data and marketing claims from Italian 
 
 ### Conad
 
-**Stage 1 — collect product links across all catalogue pages:**
+**Run both stages in sequence:**
 
 ```bash
-python -m conad_main --stage 1
+python conad_main.py
 ```
 
-**Limit to N pages (useful for testing):**
+**Run a specific stage:**
 
 ```bash
-python conad_main --stage 1 --pages 3
+python conad_main.py --stage 1
+python conad_main.py --stage 2
+python conad_main.py --stage 1 2
 ```
 
-| Argument | Required | Description |
-|---|---|---|
-| `--stage` | yes | `1` = link collection, `2` = raw data scraping |
-| `--pages` | no | Max pages to crawl (default: all pages) |
+**Limit pages or products (useful for testing):**
+
+```bash
+python conad_main.py --stage 1 --pages 3
+python conad_main.py --stage 2 --products 5
+```
+
+| Argument | Required | Default | Description |
+|---|---|---|---|
+| `--stage` | no | both | `1` = link collection, `2` = raw data scraping, `1 2` = both explicitly |
+| `--pages` | no | all | Max catalogue pages to crawl (Stage 1) |
+| `--links` | no | most recent run | Path to a specific `link_collection` folder (Stage 2) |
+| `--products` | no | all | Global fallback cap per category when not set in `--products-config` (Stage 2) |
+| `--products-config` | no | `config/conad_sampling.json` | Per-category sampling config (Stage 2) |
+| `--seed` | no | `42` | Random seed for reproducible product sampling (Stage 2) |
+| `--max` | no | off | Ignore all limits and scrape every product (Stage 2) |
 
 ### Output
 
-Stage 1 writes one JSON file per category under:
+**Stage 1** writes one JSON file per category under:
 
 ```
 link_collection/conad/DD.MM_HH/
@@ -32,16 +46,31 @@ link_collection/conad/DD.MM_HH/
   ...
 ```
 
-Each file contains a list of product objects with 14 fields: `code`, `name`, `brand`, `category_l1`, `category_l2`, `category_l3`, `base_price`, `unit_of_measure`, `min_weight`, `net_quantity_um`, `marketing_badge`, `badge_label`, `image_url`, `product_url`.
+Each file contains a list of product stubs with 14 fields: `code`, `name`, `brand`, `category_l1`, `category_l2`, `category_l3`, `base_price`, `unit_of_measure`, `min_weight`, `net_quantity_um`, `marketing_badge`, `badge_label`, `image_url`, `product_url`.
 
-Files are written incrementally after every page — partial data is preserved if the run is interrupted.
+**Stage 2** reads the Stage 1 output and writes one JSON file per category plus a product image folder:
+
+```
+raw_data/conad/DD.MM_HH/
+  frutta-e-verdura.json
+  frutta-e-verdura/
+    8001234567890.jpg
+    ...
+  run_summary.json
+```
+
+Each product record contains: `ean`, `scraped_at`, `code`, `name`, `url`, and all accordion sections extracted from the product page (e.g. `ingredienti`, `valori_nutrizionali`, `tracciabilita_e_avvertenze`).
+
+`run_summary.json` is written after every product and updated on completion with start time, end time, duration, and per-category counts. A crashed run leaves a valid summary with `status: in_progress`.
+
+Both stages write incrementally — partial data is preserved if the run is interrupted. Re-running within the same hour resumes in the same output folder automatically.
 
 ## Project structure
 
 ```
 src/
   adapters/    ← one file per site (SiteConfig + parsing logic)
-  stages/      ← pipeline stages (stage 1: link_collector.py, stage 2: in progress...)
+  stages/      ← pipeline stages (link_collector.py, raw_scraper.py)
   utils/       ← shared helpers (browser, storage, logger, parser)
 conad_main.py  ← entry point for Conad
 ```
