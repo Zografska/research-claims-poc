@@ -3,6 +3,11 @@ from datetime import datetime
 from pathlib import Path
 
 
+def fmt_duration(seconds: float) -> str:
+    m, s = divmod(int(seconds), 60)
+    return f"{m}m {s}s" if m else f"{s}s"
+
+
 def timestamped_folder(base: Path, site_name: str) -> Path:
     ts = datetime.now().strftime("%d.%m_%H")
     folder = base / site_name / ts
