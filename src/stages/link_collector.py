@@ -10,16 +10,16 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
-from src.utils.storage import safe_filename, timestamped_folder, write_json
+from src.utils.storage import (
+    fmt_duration,
+    safe_filename,
+    timestamped_folder,
+    write_json,
+)
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LINK_COLLECTION_DIR = PROJECT_ROOT / "link_collection"
 SESSION_ID = "conad_catalogue"
-
-
-def _fmt(seconds: float) -> str:
-    m, s = divmod(int(seconds), 60)
-    return f"{m}m {s}s" if m else f"{s}s"
 
 
 def _log_page_summary(
@@ -33,7 +33,7 @@ def _log_page_summary(
 ) -> None:
     logging.info(
         f"Page {page}/{total_pages} — {len(products)} new | {running_total} total "
-        f"| page {_fmt(page_time)} | uptime {_fmt(elapsed)}"
+        f"| page {fmt_duration(page_time)} | uptime {fmt_duration(elapsed)}"
     )
     for cat, items in sorted(by_category.items()):
         logging.info(f"  {cat}: {len(items)}")
