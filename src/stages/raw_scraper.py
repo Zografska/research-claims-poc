@@ -3,7 +3,6 @@ import json
 import logging
 import random
 import time
-from datetime import datetime
 from pathlib import Path
 
 import httpx
@@ -11,7 +10,7 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
-from src.utils.storage import fmt_duration, timestamped_folder, write_json
+from src.utils.storage import fmt_duration, now_rome, timestamped_folder, write_json
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / "raw_data"
@@ -100,8 +99,16 @@ async def scrape_raw(
     out_folder = timestamped_folder(RAW_DATA_DIR, cfg.name)
     browser_cfg = make_browser_config(cfg)
     run_start = time.perf_counter()
-    started_at = datetime.now()
     sem = asyncio.Semaphore(CONCURRENCY)
+
+    summary_path = out_folder / "run_summary.json"
+    existing_summary = {}
+    if summary_path.exists():
+        try:
+            existing_summary = json.loads(summary_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    started_at_str = existing_summary.get("started_at") or now_rome().isoformat(timespec="seconds")
 
     category_files = sorted(links_folder.glob("*.json"))
     logging.info(f"Found {len(category_files)} categories in {links_folder}")
@@ -176,7 +183,7 @@ async def scrape_raw(
 
                 record = {
                     "ean": ean,
-                    "scraped_at": datetime.now().isoformat(timespec="seconds"),
+                    "scraped_at": now_rome().isoformat(timespec="seconds"),
                     "code": product.get("code", ""),
                     "name": product.get("name", ""),
                     "url": url,
@@ -190,22 +197,30 @@ async def scrape_raw(
                     f"  [{total_ok}/{global_total}] {ean} — {product.get('name', '')} "
                     f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
                 )
+                write_json(summary_path, {
+                    "status": "in_progress",
+                    "started_at": started_at_str,
+                    "total_ok": total_ok,
+                    "total_failed": total_fail,
+                    "categories": {**cat_stats, category: {"ok": cat_ok, "failed": cat_fail}},
+                })
 
             cat_stats[category] = {"ok": cat_ok, "failed": cat_fail}
             logging.info(
                 f"{category}: {cat_ok} ok, {cat_fail} failed | {fmt_duration(time.perf_counter() - cat_start)}"
             )
 
-    ended_at = datetime.now()
+    ended_at = now_rome().isoformat(timespec="seconds")
     summary = {
-        "started_at": started_at.isoformat(timespec="seconds"),
-        "ended_at": ended_at.isoformat(timespec="seconds"),
+        "status": "complete",
+        "started_at": started_at_str,
+        "ended_at": ended_at,
         "duration": fmt_duration(time.perf_counter() - run_start),
         "total_ok": total_ok,
         "total_failed": total_fail,
         "categories": cat_stats,
     }
-    write_json(out_folder / "run_summary.json", summary)
+    write_json(summary_path, summary)
     logging.info(
         f"Stage 2 complete → {out_folder} | "
         f"{total_ok} ok, {total_fail} failed | {fmt_duration(time.perf_counter() - run_start)}"
