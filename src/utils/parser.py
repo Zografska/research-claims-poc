@@ -8,9 +8,10 @@ def get_conad_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--stage",
         type=int,
-        required=True,
+        nargs="+",
         choices=[1, 2],
-        help="Stage to run: 1 = link collection, 2 = raw data scraping",
+        default=None,
+        help="Stage(s) to run: 1 = link collection, 2 = raw data scraping (default: run both)",
     )
     parser.add_argument(
         "--pages",

@@ -38,10 +38,12 @@ async def main():
 
     setup_logger()
 
-    if args.stage == 1:
+    stages = set(args.stage) if args.stage else {1, 2}
+
+    if 1 in stages:
         await collect_links(CONAD, max_pages=args.pages)
 
-    elif args.stage == 2:
+    if 2 in stages:
         links_folder = _resolve_links_folder(args.links)
         if links_folder is None:
             logging.error("No link_collection folder found. Run stage 1 first.")
