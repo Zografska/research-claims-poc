@@ -29,4 +29,5 @@ class SiteConfig:
 
     # Site-specific logic (fat adapter pattern)
     next_page_js: str = ""                  # JS to navigate to next page; empty if URL-based
-    parse_cards: Optional[Callable] = None  # fn(html, cfg) -> list[dict]; defined in each adapter
+    parse_cards: Optional[Callable] = None         # fn(html, cfg) -> list[dict]; defined in each adapter
+    parse_product_page: Optional[Callable] = None  # fn(html, cfg) -> dict; defined in each adapter
