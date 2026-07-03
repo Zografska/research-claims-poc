@@ -5,6 +5,14 @@ from bs4 import BeautifulSoup
 from .base import SiteConfig
 
 
+def _get_conad_total_pages(html: str) -> int:
+    soup = BeautifulSoup(html, "html.parser")
+    pages = soup.select("div.component-Pagination a[data-page]")
+    if not pages:
+        return 1
+    return max(int(p["data-page"]) for p in pages)
+
+
 def _parse_conad_cards(html: str, cfg: SiteConfig) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
     products = []
@@ -128,6 +136,7 @@ CONAD = SiteConfig(
     },
     page_param="page",
     first_page=1,
+    session_id="conad_catalogue",
     # Site-specific logic
     next_page_js="""
 (async () => {
@@ -137,4 +146,5 @@ CONAD = SiteConfig(
 """,
     parse_cards=_parse_conad_cards,
     parse_product_page=_parse_conad_product_page,
+    get_total_pages=_get_conad_total_pages,
 )

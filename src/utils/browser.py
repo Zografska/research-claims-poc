@@ -5,7 +5,7 @@ from src.adapters.base import SiteConfig
 
 def make_browser_config(cfg: SiteConfig) -> BrowserConfig:
     return BrowserConfig(
-        headless=False,
+        headless=True,
         use_managed_browser=True,
         extra_args=["--disable-blink-features=AutomationControlled"],
         headers=cfg.extra_headers,

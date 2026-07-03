@@ -19,8 +19,6 @@ from src.utils.storage import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LINK_COLLECTION_DIR = PROJECT_ROOT / "link_collection"
-SESSION_ID = "conad_catalogue"
-
 
 def _log_page_summary(
     page: int,
@@ -38,13 +36,6 @@ def _log_page_summary(
     for cat, items in sorted(by_category.items()):
         logging.info(f"  {cat}: {len(items)}")
 
-
-def _get_total_pages(html: str) -> int:
-    soup = BeautifulSoup(html, "html.parser")
-    pages = soup.select("div.component-Pagination a[data-page]")
-    if not pages:
-        return 1
-    return max(int(p["data-page"]) for p in pages)
 
 
 def _has_cards(html: str, cfg: SiteConfig) -> bool:
@@ -70,7 +61,7 @@ async def _fetch_page(
             if page_num == 1:
                 # Fresh load: navigate to URL, accept cookies
                 run_cfg = CrawlerRunConfig(
-                    session_id=SESSION_ID,
+                    session_id=cfg.session_id,
                     js_code=js_code,
                     page_timeout=cfg.page_timeout,
                     wait_until="networkidle",
@@ -80,7 +71,7 @@ async def _fetch_page(
             else:
                 # Stay on the same tab — run next_page_js without reloading
                 run_cfg = CrawlerRunConfig(
-                    session_id=SESSION_ID,
+                    session_id=cfg.session_id,
                     js_code=js_code,
                     js_only=True,
                     page_timeout=cfg.page_timeout,
@@ -128,7 +119,7 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
             logging.error("Failed to load catalogue page. Aborting.")
             return out_folder
 
-        total_pages = _get_total_pages(html)
+        total_pages = cfg.get_total_pages(html) if cfg.get_total_pages else 1
         if max_pages:
             total_pages = min(max_pages, total_pages)
         logging.info(f"Total pages to crawl: {total_pages}")

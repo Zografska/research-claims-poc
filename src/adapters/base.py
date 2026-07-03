@@ -26,8 +26,10 @@ class SiteConfig:
     # Pagination
     page_param: Optional[str] = "page"     # query param for page number
     first_page: int = 1                    # page number the site starts at
+    session_id: Optional[str] = None       # browser session ID for tab reuse across pages
 
     # Site-specific logic (fat adapter pattern)
     next_page_js: str = ""                  # JS to navigate to next page; empty if URL-based
     parse_cards: Optional[Callable] = None         # fn(html, cfg) -> list[dict]; defined in each adapter
     parse_product_page: Optional[Callable] = None  # fn(html, cfg) -> dict; defined in each adapter
+    get_total_pages: Optional[Callable] = None     # fn(html) -> int; defined in each adapter
