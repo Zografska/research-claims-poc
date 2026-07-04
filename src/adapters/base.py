@@ -33,3 +33,14 @@ class SiteConfig:
     parse_cards: Optional[Callable] = None         # fn(html, cfg) -> list[dict]; defined in each adapter
     parse_product_page: Optional[Callable] = None  # fn(html, cfg) -> dict; defined in each adapter
     get_total_pages: Optional[Callable] = None     # fn(html) -> int; defined in each adapter
+
+    # Fetch strategy — "browser" (default, crawl4ai) or "http" (plain httpx, no browser)
+    fetch_mode: str = "browser"
+    concurrency: int = 1                    # max simultaneous in-flight requests (Semaphore size)
+
+    # HTTP-mode pagination (offset-based, multi-category) — used when fetch_mode == "http"
+    page_size: int = 25                             # items per request, e.g. "sz" param
+    bootstrap_url: Optional[str] = None              # page fetched once to discover categories
+    discover_categories: Optional[Callable] = None   # fn(html) -> list[str] of category ids
+    build_listing_url: Optional[Callable] = None     # fn(cfg, category_id, start) -> str
+    get_product_count: Optional[Callable] = None     # fn(html) -> int; total items in a category
