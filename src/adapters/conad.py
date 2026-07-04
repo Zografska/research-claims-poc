@@ -34,9 +34,7 @@ def _parse_conad_cards(html: str, cfg: SiteConfig) -> list[dict]:
         href = link_tag["href"] if link_tag and link_tag.get("href") else ""
         product_url = cfg.base_url + href if href.startswith("/") else href
 
-        increment = (
-            data.get("increment") if isinstance(data.get("increment"), dict) else {}
-        )
+        increment = data.get("increment") if isinstance(data.get("increment"), dict) else {}
 
         products.append(
             {

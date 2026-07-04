@@ -141,7 +141,13 @@ async def scrape_raw(
             continue
         done_urls = _load_done(out_folder / f"{category}.json")
         todo = _resolve_todo(
-            products, done_urls, category, sampling_config or {}, fallback, use_max, seed
+            products,
+            done_urls,
+            category,
+            sampling_config or {},
+            fallback,
+            use_max,
+            seed,
         )
         category_plan.append((cat_file, category, products, done_urls, todo))
 
@@ -175,9 +181,7 @@ async def scrape_raw(
             cat_ok, cat_fail = 0, 0
 
             if cfg.fetch_mode == "http":
-                tasks = [
-                    _fetch_one_http(conn, cfg, p["product_url"], sem, pause) for p in todo
-                ]
+                tasks = [_fetch_one_http(conn, cfg, p["product_url"], sem, pause) for p in todo]
             else:
                 tasks = [_fetch_one(conn, cfg, p["product_url"], sem) for p in todo]
             for coro in asyncio.as_completed(tasks):
@@ -224,13 +228,19 @@ async def scrape_raw(
                     f"  [{total_ok}/{global_total}] {ean} — {product.get('name', '')} "
                     f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
                 )
-                write_json(summary_path, {
-                    "status": "in_progress",
-                    "started_at": started_at_str,
-                    "total_ok": total_ok,
-                    "total_failed": total_fail,
-                    "categories": {**cat_stats, category: {"ok": cat_ok, "failed": cat_fail}},
-                })
+                write_json(
+                    summary_path,
+                    {
+                        "status": "in_progress",
+                        "started_at": started_at_str,
+                        "total_ok": total_ok,
+                        "total_failed": total_fail,
+                        "categories": {
+                            **cat_stats,
+                            category: {"ok": cat_ok, "failed": cat_fail},
+                        },
+                    },
+                )
 
             cat_stats[category] = {"ok": cat_ok, "failed": cat_fail}
             logging.info(

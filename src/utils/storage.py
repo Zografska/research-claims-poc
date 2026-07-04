@@ -29,11 +29,4 @@ def write_json(path: Path, data: list | dict) -> None:
 
 
 def safe_filename(name: str) -> str:
-    return (
-        name.lower()
-        .replace(" ", "-")
-        .replace("/", "-")
-        .replace("'", "")
-        .replace(",", "")
-        .strip("-")
-    )
+    return name.lower().replace(" ", "-").replace("/", "-").replace("'", "").replace(",", "").strip("-")

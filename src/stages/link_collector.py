@@ -135,10 +135,7 @@ async def _fetch_category_products(
     if max_pages:
         starts = starts[: max_pages - 1]  # page 1 already fetched above
 
-    tasks = [
-        _fetch_listing_page(client, cfg, category_id, start, sem, pause)
-        for start in starts
-    ]
+    tasks = [_fetch_listing_page(client, cfg, category_id, start, sem, pause) for start in starts]
     for coro in asyncio.as_completed(tasks):
         page_products = await coro
         by_category[category_id].extend(page_products)
@@ -180,9 +177,7 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
             )
             await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
 
-    logging.info(
-        f"Stage 1 complete — {len(all_products)} total products → {out_folder}"
-    )
+    logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
     return out_folder
 
 
@@ -232,9 +227,7 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
         # Pages 2+: click next on the same tab
         for page in range(2, total_pages + 1):
             page_start = time.perf_counter()
-            html = await _fetch_page(
-                crawler, cfg, js_code=cfg.next_page_js, page_num=page
-            )
+            html = await _fetch_page(crawler, cfg, js_code=cfg.next_page_js, page_num=page)
             if html is None:
                 logging.warning(f"Skipping page {page} after all retries failed")
                 continue
@@ -258,7 +251,5 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
             await asyncio.sleep(delay)
 
     _flush(by_category, out_folder)
-    logging.info(
-        f"Stage 1 complete — {len(all_products)} total products → {out_folder}"
-    )
+    logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
     return out_folder

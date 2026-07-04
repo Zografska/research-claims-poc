@@ -77,9 +77,7 @@ def _parse_carrefour_cards(html: str, cfg: SiteConfig) -> list[dict]:
                 f"({breadcrumbs!r}) — leaving category_l1/l2/l3 empty"
             )
             breadcrumbs = []
-        crumb_ids = [
-            c.get("categoryId", "") for c in breadcrumbs[1:]
-        ]  # skip root "FOOD"
+        crumb_ids = [c.get("categoryId", "") for c in breadcrumbs[1:]]  # skip root "FOOD"
 
         products.append(
             {
