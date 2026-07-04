@@ -7,7 +7,7 @@ from src.adapters.conad import CONAD
 from src.stages.link_collector import collect_links
 from src.stages.raw_scraper import scrape_raw
 from src.utils.logger import setup_logger
-from src.utils.parser import get_conad_parser
+from src.utils.parser import get_parser
 
 LINK_COLLECTION_DIR = Path(__file__).resolve().parent / "link_collection" / "conad"
 
@@ -33,7 +33,7 @@ def _load_sampling_config(path: Path) -> dict:
 
 
 async def main():
-    parser = get_conad_parser()
+    parser = get_parser("conad")
     args = parser.parse_args()
 
     setup_logger()
