@@ -81,15 +81,15 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
         if not content:
             continue
 
-        wysiwyg = content.select_one("div.wysiwyg_editor")
-        if not wysiwyg:
+        sub_sections_container = content.select_one("div.wysiwyg_editor")
+        if not sub_sections_container:
             result[section_key] = content.get_text(" ", strip=True)
             continue
 
         # Pair each p.no-margin-bottom header with the following html-esb-field
         sub_sections = {}
         current_key = None
-        for child in wysiwyg.children:
+        for child in sub_sections_container.children:
             if not hasattr(child, "name") or child.name is None:
                 continue
             if child.name == "p" and "no-margin-bottom" in child.get("class", []):
@@ -101,7 +101,9 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
                     sub_sections[current_key] = child.get_text(" ", strip=True)
                     current_key = None
 
-        result[section_key] = sub_sections if sub_sections else content.get_text(" ", strip=True)
+        result[section_key] = (
+            sub_sections if sub_sections else content.get_text(" ", strip=True)
+        )
 
     return result
 
