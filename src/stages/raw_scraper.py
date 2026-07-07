@@ -3,6 +3,7 @@ import json
 import logging
 import random
 import time
+from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -114,6 +115,29 @@ def _resolve_todo(
     return [p for p in sample if p.get("product_url") not in done_urls]
 
 
+def _check_breaker(failures: list[dict], cfg: SiteConfig) -> tuple[str, str] | None:
+    if not failures:
+        return None
+
+    latest = failures[-1]
+    if latest["reason"] == "forbidden":
+        return "abort", "got 'forbidden' (403)"
+
+    if latest["reason"] == "rate_limited":
+        window_start = now_rome() - timedelta(minutes=cfg.breaker_window_minutes)
+        recent = [
+            f
+            for f in failures
+            if f["reason"] == "rate_limited" and datetime.fromisoformat(f["failed_at"]) >= window_start
+        ]
+        if len(recent) >= cfg.breaker_rate_limited_threshold:
+            return "pause", f"{len(recent)} rate_limited failures in the last {cfg.breaker_window_minutes} minutes"
+
+    return None
+
+    return None
+
+
 async def scrape_raw(
     cfg: SiteConfig,
     links_folder: Path,
@@ -211,9 +235,10 @@ async def scrape_raw(
             cat_ok, cat_fail = 0, 0
 
             if mode == "http":
-                tasks = [_fetch_one_http(conn, cfg, p["product_url"], sem, pause) for p in todo]
+                tasks = [asyncio.create_task(_fetch_one_http(conn, cfg, p["product_url"], sem, pause)) for p in todo]
             else:
-                tasks = [_fetch_one(conn, cfg, p["product_url"], sem) for p in todo]
+                tasks = [asyncio.create_task(_fetch_one(conn, cfg, p["product_url"], sem)) for p in todo]
+            breaker_action = None
             for coro in asyncio.as_completed(tasks):
                 url, result, page_time, fetch_fail_reason = await coro
                 product = url_to_product[url]
@@ -273,6 +298,10 @@ async def scrape_raw(
                         }
                     )
                     write_json(failures_path, failures)
+                    breaker_result = _check_breaker(failures, cfg)
+                    if breaker_result:
+                        breaker_action, breaker_message = breaker_result
+                        logging.warning(f"Circuit breaker tripped: {breaker_message}")
 
                 write_json(
                     summary_path,
@@ -288,10 +317,39 @@ async def scrape_raw(
                     },
                 )
 
+                if breaker_action:
+                    for t in tasks:
+                        if not t.done():
+                            t.cancel()
+                    await asyncio.gather(*tasks, return_exceptions=True)
+                    break
+
             cat_stats[category] = {"ok": prior_ok + cat_ok, "failed": prior_fail + cat_fail}
             logging.info(
                 f"{category}: {cat_ok} ok, {cat_fail} failed | {fmt_duration(time.perf_counter() - cat_start)}"
             )
+
+            if breaker_action == "abort":
+                ended_at = now_rome().isoformat(timespec="seconds")
+                write_json(
+                    summary_path,
+                    {
+                        "status": "circuit_broken",
+                        "started_at": started_at_str,
+                        "ended_at": ended_at,
+                        "duration": fmt_duration(time.perf_counter() - run_start),
+                        "total_ok": total_ok,
+                        "total_failed": total_fail,
+                        "categories": cat_stats,
+                    },
+                )
+                logging.error(f"Circuit breaker aborted the run → {out_folder}. Resume later with --resume.")
+                return out_folder
+
+            if breaker_action == "pause":
+                logging.warning(f"Circuit breaker pausing for {cfg.breaker_pause_minutes} minutes...")
+                await asyncio.sleep(cfg.breaker_pause_minutes * 60)
+                logging.info("Circuit breaker pause finished, resuming.")
 
     ended_at = now_rome().isoformat(timespec="seconds")
     summary = {

@@ -69,5 +69,26 @@ def get_parser(site_name: str) -> argparse.ArgumentParser:
             "DDMMHH folder name (e.g. 060711 for 06.07_11). Default: start a new run."
         ),
     )
+    parser.add_argument(
+        "-brt",
+        "--breaker-rate-limited-threshold",
+        type=int,
+        default=None,
+        help="Override how many rate_limited failures within the window trip the breaker (default: adapter config)",
+    )
+    parser.add_argument(
+        "-bw",
+        "--breaker-window-minutes",
+        type=int,
+        default=None,
+        help="Override the rolling window (minutes) used to count rate_limited failures (default: adapter config)",
+    )
+    parser.add_argument(
+        "-bp",
+        "--breaker-pause-minutes",
+        type=int,
+        default=None,
+        help="Override how long the breaker pauses before resuming after a rate_limited trip (default: adapter config)",
+    )
 
     return parser

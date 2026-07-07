@@ -66,6 +66,12 @@ async def main():
             overrides["raw_fetch_mode"] = args.fetch_mode
         if args.concurrency:
             overrides["concurrency"] = args.concurrency
+        if args.breaker_rate_limited_threshold:
+            overrides["breaker_rate_limited_threshold"] = args.breaker_rate_limited_threshold
+        if args.breaker_window_minutes:
+            overrides["breaker_window_minutes"] = args.breaker_window_minutes
+        if args.breaker_pause_minutes:
+            overrides["breaker_pause_minutes"] = args.breaker_pause_minutes
         cfg = dataclasses.replace(CONAD, **overrides) if overrides else CONAD
         await scrape_raw(
             cfg,
