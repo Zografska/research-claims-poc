@@ -48,5 +48,26 @@ def get_parser(site_name: str) -> argparse.ArgumentParser:
         action="store_true",
         help="Ignore all limits and scrape every product in every category",
     )
+    parser.add_argument(
+        "--fetch-mode",
+        choices=["http", "browser"],
+        default=None,
+        help="Override stage 2's fetch mode (default: whatever the adapter config specifies)",
+    )
+    parser.add_argument(
+        "--concurrency",
+        type=int,
+        default=None,
+        help="Override stage 2's concurrency (default: whatever the adapter config specifies)",
+    )
+    parser.add_argument(
+        "--resume",
+        type=str,
+        default=None,
+        help=(
+            "Resume stage 2 into an existing raw_data run, given as a compact "
+            "DDMMHH folder name (e.g. 060711 for 06.07_11). Default: start a new run."
+        ),
+    )
 
     return parser

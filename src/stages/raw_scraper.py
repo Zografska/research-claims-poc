@@ -122,12 +122,13 @@ async def scrape_raw(
     fallback: int | None = None,
     seed: int = 42,
     use_max: bool = False,
+    resume_folder: Path | None = None,
 ) -> Path:
     if cfg.parse_product_page is None:
         raise ValueError(f"Adapter '{cfg.name}' does not define parse_product_page")
 
     mode = cfg.raw_fetch_mode or cfg.fetch_mode
-    out_folder = timestamped_folder(RAW_DATA_DIR, cfg.name)
+    out_folder = resume_folder if resume_folder else timestamped_folder(RAW_DATA_DIR, cfg.name)
     run_start = time.perf_counter()
     sem = asyncio.Semaphore(cfg.concurrency)
     pause = asyncio.Event()

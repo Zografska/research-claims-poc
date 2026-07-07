@@ -1,4 +1,5 @@
 import asyncio
+import dataclasses
 import json
 import logging
 from pathlib import Path
@@ -10,6 +11,7 @@ from src.utils.logger import setup_logger
 from src.utils.parser import get_parser
 
 LINK_COLLECTION_DIR = Path(__file__).resolve().parent / "link_collection" / "carrefour"
+RAW_DATA_DIR = Path(__file__).resolve().parent / "raw_data" / "carrefour"
 
 
 def _resolve_links_folder(arg: Path | None) -> Path | None:
@@ -19,6 +21,15 @@ def _resolve_links_folder(arg: Path | None) -> Path | None:
         return None
     runs = sorted(LINK_COLLECTION_DIR.iterdir(), reverse=True)
     return runs[0] if runs else None
+
+
+def _resolve_resume_folder(compact: str | None) -> Path | None:
+    if not compact:
+        return None
+    if len(compact) != 6 or not compact.isdigit():
+        raise ValueError(f"--resume expects a 6-digit DDMMHH value (e.g. 060711), got {compact!r}")
+    day, month, hour = compact[:2], compact[2:4], compact[4:6]
+    return RAW_DATA_DIR / f"{day}.{month}_{hour}"
 
 
 def _load_sampling_config(path: Path) -> dict:
@@ -50,13 +61,20 @@ async def main():
             return
         logging.info(f"Using links folder: {links_folder}")
         sampling_config = _load_sampling_config(args.products_config)
+        overrides = {}
+        if args.fetch_mode:
+            overrides["raw_fetch_mode"] = args.fetch_mode
+        if args.concurrency:
+            overrides["concurrency"] = args.concurrency
+        cfg = dataclasses.replace(CARREFOUR, **overrides) if overrides else CARREFOUR
         await scrape_raw(
-            CARREFOUR,
+            cfg,
             links_folder,
             sampling_config=sampling_config,
             fallback=args.products,
             seed=args.seed,
             use_max=args.max,
+            resume_folder=_resolve_resume_folder(args.resume),
         )
 
 
