@@ -68,13 +68,13 @@ async def _fetch_one_http(
     url: str,
     sem: asyncio.Semaphore,
     pause: asyncio.Event,
-) -> tuple[str, object, float]:
+) -> tuple[str, object, float, str | None]:
     async with sem:
         page_start = time.perf_counter()
-        html = await fetch_html(client, url, pause)
+        html, fail_reason = await fetch_html(client, url, pause)
         await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
         result = SimpleNamespace(success=True, html=html) if html else None
-        return url, result, time.perf_counter() - page_start
+        return url, result, time.perf_counter() - page_start, fail_reason
 
 
 def _resolve_todo(
@@ -112,6 +112,7 @@ async def scrape_raw(
     if cfg.parse_product_page is None:
         raise ValueError(f"Adapter '{cfg.name}' does not define parse_product_page")
 
+    mode = cfg.raw_fetch_mode or cfg.fetch_mode
     out_folder = timestamped_folder(RAW_DATA_DIR, cfg.name)
     run_start = time.perf_counter()
     sem = asyncio.Semaphore(cfg.concurrency)
@@ -126,6 +127,14 @@ async def scrape_raw(
         except Exception:
             pass
     started_at_str = existing_summary.get("started_at") or now_rome().isoformat(timespec="seconds")
+
+    failures_path = out_folder / "run_failures.json"
+    failures: list[dict] = []
+    if failures_path.exists():
+        try:
+            failures = json.loads(failures_path.read_text(encoding="utf-8"))
+        except Exception:
+            failures = []
 
     category_files = sorted(links_folder.glob("*.json"))
     logging.info(f"Found {len(category_files)} categories in {links_folder}")
@@ -154,10 +163,11 @@ async def scrape_raw(
     global_total = sum(len(todo) for _, _, _, _, todo in category_plan)
     logging.info(f"Total products to scrape this run: {global_total}")
 
-    total_ok, total_fail = 0, 0
-    cat_stats: dict[str, dict] = {}
+    total_ok = existing_summary.get("total_ok", 0)
+    total_fail = existing_summary.get("total_failed", 0)
+    cat_stats: dict[str, dict] = dict(existing_summary.get("categories", {}))
 
-    if cfg.fetch_mode == "http":
+    if mode == "http":
         conn_cm = make_http_client(cfg)
     else:
         conn_cm = AsyncWebCrawler(config=make_browser_config(cfg))
@@ -170,7 +180,12 @@ async def scrape_raw(
 
             if not todo:
                 logging.info(f"{category}: already complete, skipping")
-                cat_stats[category] = {"ok": 0, "failed": 0, "skipped": True}
+                prior = cat_stats.get(category, {"ok": 0, "failed": 0})
+                cat_stats[category] = {
+                    "ok": prior.get("ok", 0),
+                    "failed": prior.get("failed", 0),
+                    "skipped": True,
+                }
                 continue
 
             logging.info(f"{category}: {len(todo)} to scrape, {len(done_urls)} already done")
@@ -178,56 +193,74 @@ async def scrape_raw(
             records = json.loads(out_json.read_text(encoding="utf-8")) if out_json.exists() else []
             url_to_product = {p["product_url"]: p for p in todo}
             cat_start = time.perf_counter()
+            prior_ok = cat_stats.get(category, {}).get("ok", 0)
+            prior_fail = cat_stats.get(category, {}).get("failed", 0)
             cat_ok, cat_fail = 0, 0
 
-            if cfg.fetch_mode == "http":
+            if mode == "http":
                 tasks = [_fetch_one_http(conn, cfg, p["product_url"], sem, pause) for p in todo]
             else:
                 tasks = [_fetch_one(conn, cfg, p["product_url"], sem) for p in todo]
             for coro in asyncio.as_completed(tasks):
-                url, result, page_time = await coro
+                url, result, page_time, fetch_fail_reason = await coro
                 product = url_to_product[url]
+                ean = None
+                fail_reason = None
 
                 if not result or not result.success or not result.html:
                     logging.warning(f"Skipping {url}")
+                    fail_reason = fetch_fail_reason or "fetch_failed"
+                else:
+                    parsed = cfg.parse_product_page(result.html, cfg)
+                    if not parsed:
+                        logging.warning(f"No content parsed from {url}")
+                        fail_reason = "parse_failed"
+                    else:
+                        ean = parsed.pop("ean", None)
+                        if not ean:
+                            logging.warning(f"No EAN at {url}")
+                            fail_reason = "no_ean"
+
+                if ean:
+                    img_path = img_folder / f"{ean}.jpg"
+                    if not img_path.exists() and product.get("image_url"):
+                        await _download_image(product["image_url"], img_path)
+
+                    record = {
+                        "ean": ean,
+                        "scraped_at": now_rome().isoformat(timespec="seconds"),
+                        "code": product.get("code", ""),
+                        "name": product.get("name", ""),
+                        "url": url,
+                        **parsed,
+                    }
+                    records.append(record)
+                    write_json(out_json, records)
+                    cat_ok += 1
+                    total_ok += 1
+                    logging.info(
+                        f"  [{total_ok + total_fail}/{global_total}] {ean} — {product.get('name', '')} "
+                        f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
+                    )
+                else:
                     cat_fail += 1
                     total_fail += 1
-                    continue
+                    logging.info(
+                        f"  [{total_ok + total_fail}/{global_total}] FAILED {url} ({fail_reason}) "
+                        f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
+                    )
+                    failures.append(
+                        {
+                            "category": category,
+                            "url": url,
+                            "code": product.get("code", ""),
+                            "name": product.get("name", ""),
+                            "reason": fail_reason,
+                            "failed_at": now_rome().isoformat(timespec="seconds"),
+                        }
+                    )
+                    write_json(failures_path, failures)
 
-                parsed = cfg.parse_product_page(result.html, cfg)
-                if not parsed:
-                    logging.warning(f"No content parsed from {url}")
-                    cat_fail += 1
-                    total_fail += 1
-                    continue
-
-                ean = parsed.pop("ean", None)
-                if not ean:
-                    logging.warning(f"No EAN at {url}")
-                    cat_fail += 1
-                    total_fail += 1
-                    continue
-
-                img_path = img_folder / f"{ean}.jpg"
-                if not img_path.exists() and product.get("image_url"):
-                    await _download_image(product["image_url"], img_path)
-
-                record = {
-                    "ean": ean,
-                    "scraped_at": now_rome().isoformat(timespec="seconds"),
-                    "code": product.get("code", ""),
-                    "name": product.get("name", ""),
-                    "url": url,
-                    **parsed,
-                }
-                records.append(record)
-                write_json(out_json, records)
-                cat_ok += 1
-                total_ok += 1
-                logging.info(
-                    f"  [{total_ok}/{global_total}] {ean} — {product.get('name', '')} "
-                    f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
-                )
                 write_json(
                     summary_path,
                     {
@@ -237,12 +270,12 @@ async def scrape_raw(
                         "total_failed": total_fail,
                         "categories": {
                             **cat_stats,
-                            category: {"ok": cat_ok, "failed": cat_fail},
+                            category: {"ok": prior_ok + cat_ok, "failed": prior_fail + cat_fail},
                         },
                     },
                 )
 
-            cat_stats[category] = {"ok": cat_ok, "failed": cat_fail}
+            cat_stats[category] = {"ok": prior_ok + cat_ok, "failed": prior_fail + cat_fail}
             logging.info(
                 f"{category}: {cat_ok} ok, {cat_fail} failed | {fmt_duration(time.perf_counter() - cat_start)}"
             )

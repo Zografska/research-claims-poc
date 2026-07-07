@@ -135,6 +135,9 @@ CONAD = SiteConfig(
     page_param="page",
     first_page=1,
     session_id="conad_catalogue",
+    # Fetch strategy — Stage 1 stays on the browser; Stage 2 fetches over plain HTTP
+    raw_fetch_mode="browser",
+    concurrency=1,
     # Site-specific logic
     next_page_js="""
 (async () => {

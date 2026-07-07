@@ -107,7 +107,7 @@ async def _fetch_listing_page(
 ) -> list[dict]:
     async with sem:
         url = cfg.build_listing_url(cfg, category_id, start)
-        html = await fetch_html(client, url, pause)
+        html, _ = await fetch_html(client, url, pause)
         await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
         return cfg.parse_cards(html, cfg) if html else []
 
@@ -123,7 +123,7 @@ async def _fetch_category_products(
     out_folder: Path,
 ) -> list[dict]:
     first_url = cfg.build_listing_url(cfg, category_id, 0)
-    html = await fetch_html(client, first_url, pause)
+    html, _ = await fetch_html(client, first_url, pause)
     if html is None:
         return []
 

@@ -36,6 +36,7 @@ class SiteConfig:
 
     # Fetch strategy — "browser" (default, crawl4ai) or "http" (plain httpx, no browser)
     fetch_mode: str = "browser"
+    raw_fetch_mode: Optional[str] = None  # override fetch_mode for Stage 2 only; None = same as fetch_mode
     concurrency: int = 1  # max simultaneous in-flight requests (Semaphore size)
 
     # HTTP-mode pagination (offset-based, multi-category) — used when fetch_mode == "http"
