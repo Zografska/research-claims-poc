@@ -84,20 +84,32 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
             result[section_key] = content.get_text(" ", strip=True)
             continue
 
-        # Pair each p.no-margin-bottom header with the following html-esb-field
+        # Walk the accordion body: any <p> that's just a bold label starts a new
+        # sub-section (regardless of its CSS class); everything after it — text
+        # paragraphs, bullet lists, image badges — is appended to that sub-section
+        # until the next such label is hit.
         sub_sections = {}
         current_key = None
         for child in wysiwyg.children:
             if not hasattr(child, "name") or child.name is None:
                 continue
-            if child.name == "p" and "no-margin-bottom" in child.get("class", []):
+
+            if child.name == "p":
                 b = child.find("b")
-                if b:
+                if b and b.get_text(strip=True) == child.get_text(strip=True):
                     current_key = b.get_text(strip=True).lower().replace(" ", "_")
-            elif child.name == "div" and "html-esb-field" in child.get("class", []):
-                if current_key:
-                    sub_sections[current_key] = child.get_text(" ", strip=True)
-                    current_key = None
+                    continue
+
+            if current_key is None:
+                continue
+
+            text = child.get_text(" ", strip=True)
+            if not text:
+                images = [child] if child.name == "img" else child.find_all("img")
+                text = " ".join(img.get("alt") or img.get("title") or "" for img in images).strip()
+
+            if text:
+                sub_sections[current_key] = (sub_sections.get(current_key, "") + " " + text).strip()
 
         result[section_key] = sub_sections if sub_sections else content.get_text(" ", strip=True)
 
