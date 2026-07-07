@@ -61,8 +61,6 @@ def _parse_carrefour_cards(html: str, cfg: SiteConfig) -> list[dict]:
         img_tag = card.select_one("img.tile-image")
         image_url = ""
         if img_tag:
-            # Most tiles lazy-load: real URL is in data-src, src is absent.
-            # Only a handful of "above the fold" tiles are eager and use src directly.
             image_url = img_tag.get("data-src") or img_tag.get("src") or ""
         if image_url.startswith("/"):
             image_url = cfg.base_url + image_url
@@ -77,7 +75,7 @@ def _parse_carrefour_cards(html: str, cfg: SiteConfig) -> list[dict]:
                 f"({breadcrumbs!r}) — leaving category_l1/l2/l3 empty"
             )
             breadcrumbs = []
-        crumb_ids = [c.get("categoryId", "") for c in breadcrumbs[1:]]  # skip root "FOOD"
+        crumb_ids = [c.get("categoryId", "") for c in breadcrumbs[1:]]
 
         products.append(
             {
@@ -137,15 +135,12 @@ def _parse_carrefour_product_page(html: str, cfg: SiteConfig) -> dict | None:
 CARREFOUR = SiteConfig(
     name="carrefour",
     base_url="https://www.carrefour.it",
-    # Stage 1 — listing (unused in http mode, kept for interface parity)
     catalogue_url="",
     category_param="cgid",
     product_card_selector="article.product.tile[data-pid]",
     badge_selector="",
-    # Stage 2 — product detail page
     detail_description_selector="",
     detail_data_attr="data-option-product",
-    # Fetch strategy
     fetch_mode="http",
     concurrency=25,
     page_size=25,
@@ -159,7 +154,6 @@ CARREFOUR = SiteConfig(
             "Chrome/120.0.0.0 Safari/537.36"
         ),
     },
-    # Site-specific logic
     discover_categories=_discover_carrefour_categories,
     build_listing_url=_build_carrefour_listing_url,
     get_product_count=_get_carrefour_product_count,

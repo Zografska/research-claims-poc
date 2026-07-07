@@ -110,7 +110,6 @@ def _resolve_todo(
     if limit is None or limit >= len(products):
         return [p for p in products if p.get("product_url") not in done_urls]
 
-    # Sample from full list first for reproducibility, then filter done
     sample = random.Random(seed).sample(products, limit)
     return [p for p in sample if p.get("product_url") not in done_urls]
 
@@ -154,7 +153,6 @@ async def scrape_raw(
     category_files = sorted(links_folder.glob("*.json"))
     logging.info(f"Found {len(category_files)} categories in {links_folder}")
 
-    # Pre-compute todos for all categories to get global total upfront
     category_plan = []
     for cat_file in category_files:
         category = cat_file.stem

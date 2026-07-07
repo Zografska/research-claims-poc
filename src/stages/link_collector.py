@@ -56,7 +56,6 @@ async def _fetch_page(
     for attempt in range(max_retries):
         try:
             if page_num == 1:
-                # Fresh load: navigate to URL, accept cookies
                 run_cfg = CrawlerRunConfig(
                     session_id=cfg.session_id,
                     js_code=js_code,
@@ -66,7 +65,6 @@ async def _fetch_page(
                 )
                 result = await crawler.arun(cfg.catalogue_url, config=run_cfg)
             else:
-                # Stay on the same tab — run next_page_js without reloading
                 run_cfg = CrawlerRunConfig(
                     session_id=cfg.session_id,
                     js_code=js_code,
@@ -133,7 +131,7 @@ async def _fetch_category_products(
 
     starts = list(range(cfg.page_size, total, cfg.page_size))
     if max_pages:
-        starts = starts[: max_pages - 1]  # page 1 already fetched above
+        starts = starts[: max_pages - 1]
 
     tasks = [_fetch_listing_page(client, cfg, category_id, start, sem, pause) for start in starts]
     for coro in asyncio.as_completed(tasks):
@@ -195,7 +193,6 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
     async with AsyncWebCrawler(config=browser_cfg) as crawler:
         run_start = time.perf_counter()
 
-        # Page 1: fresh load + accept cookies
         logging.info(f"Loading {cfg.catalogue_url}")
         page_start = time.perf_counter()
         html = await _fetch_page(crawler, cfg, js_code=cfg.cookie_js or "", page_num=1)
@@ -224,7 +221,6 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
             elapsed=time.perf_counter() - run_start,
         )
 
-        # Pages 2+: click next on the same tab
         for page in range(2, total_pages + 1):
             page_start = time.perf_counter()
             html = await _fetch_page(crawler, cfg, js_code=cfg.next_page_js, page_num=page)

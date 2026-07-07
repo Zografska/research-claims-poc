@@ -61,7 +61,6 @@ def _parse_conad_cards(html: str, cfg: SiteConfig) -> list[dict]:
 def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
     soup = BeautifulSoup(html, "html.parser")
 
-    # EAN from main[data-product]
     main = soup.find("main", attrs={"data-product": True})
     if not main:
         return None
@@ -72,7 +71,6 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
 
     result = {"ean": ean}
 
-    # Dynamically extract accordion sections
     for title_el in soup.select("div.uk-accordion-title"):
         section_key = title_el.get_text(strip=True).lower().replace(" ", "_")
         content = title_el.find_next_sibling("div", class_="uk-accordion-content")
@@ -84,10 +82,6 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
             result[section_key] = content.get_text(" ", strip=True)
             continue
 
-        # Walk the accordion body: any <p> that's just a bold label starts a new
-        # sub-section (regardless of its CSS class); everything after it — text
-        # paragraphs, bullet lists, image badges — is appended to that sub-section
-        # until the next such label is hit.
         sub_sections = {}
         current_key = None
         for child in wysiwyg.children:
@@ -119,15 +113,12 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
 CONAD = SiteConfig(
     name="conad",
     base_url="https://spesaonline.conad.it",
-    # Stage 1 — listing page
     catalogue_url="https://spesaonline.conad.it/tutti-i-prodotti",
     category_param="cat_lev1",
     product_card_selector="div[data-product]",
     badge_selector=".badge-territorio .text",
-    # Stage 2 — product detail page
     detail_description_selector="div.caratteristiche, div.product-other-info",
     detail_data_attr="data-product",
-    # Browser
     cookie_js="""
 (async () => {
     const btn = document.getElementById('onetrust-accept-btn-handler');
@@ -147,10 +138,8 @@ CONAD = SiteConfig(
     page_param="page",
     first_page=1,
     session_id="conad_catalogue",
-    # Fetch strategy — Stage 1 stays on the browser; Stage 2 fetches over plain HTTP
     raw_fetch_mode="browser",
     concurrency=1,
-    # Site-specific logic
     next_page_js="""
 (async () => {
     const btn = document.querySelector('a[aria-label="Pagina Successiva"]');

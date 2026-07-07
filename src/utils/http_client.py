@@ -21,7 +21,7 @@ def _parse_retry_after(value: str | None) -> int | None:
     try:
         return int(value)
     except ValueError:
-        return None  # HTTP-date form not handled; falls back to the default wait
+        return None
 
 
 async def fetch_html(
@@ -33,7 +33,7 @@ async def fetch_html(
     delay_ranges = [(3, 6), (8, 12)]
     last_reason = None
     for attempt in range(max_retries):
-        await pause.wait()  # blocks here while another request is handling a 429/403
+        await pause.wait()
         try:
             r = await client.get(url)
             if r.status_code == 200:
@@ -46,7 +46,7 @@ async def fetch_html(
                     f"GET {url} -> {r.status_code}, pausing ALL requests for {wait_s}s "
                     f"(attempt {attempt + 1}, Retry-After={r.headers.get('Retry-After')})"
                 )
-                if pause.is_set():  # avoid stacking redundant pauses from concurrent 429s/403s
+                if pause.is_set():
                     pause.clear()
                     await asyncio.sleep(wait_s)
                     pause.set()
