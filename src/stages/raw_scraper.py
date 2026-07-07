@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
+from bs4 import BeautifulSoup
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
@@ -42,24 +43,37 @@ async def _fetch_one(
     cfg: SiteConfig,
     url: str,
     sem: asyncio.Semaphore,
-) -> tuple[str, object, float]:
+) -> tuple[str, object, float, str | None]:
     async with sem:
         page_start = time.perf_counter()
+        reason = None
         try:
             run_cfg = CrawlerRunConfig(
                 js_code=cfg.cookie_js or "",
                 page_timeout=60000,
                 wait_until="domcontentloaded",
-                wait_for="css:main[data-product]",
             )
             result = await crawler.arun(url, config=run_cfg)
-            if result.success and result.html:
+            html = result.html or ""
+
+            if html and BeautifulSoup(html, "html.parser").select_one(f"[{cfg.detail_data_attr}]"):
                 await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
-                return url, result, time.perf_counter() - page_start
-            logging.warning(f"Empty result for {url}")
+                return url, result, time.perf_counter() - page_start, None
+
+            status = getattr(result, "status_code", None)
+            if status == 429:
+                reason = "rate_limited"
+            elif status == 403 or "access denied" in html.lower():
+                reason = "forbidden"
+            elif status and status != 200:
+                reason = f"http_{status}"
+            else:
+                reason = "no_selector_found"
+            logging.warning(f"{reason} for {url} (status={status})")
         except Exception as e:
+            reason = type(e).__name__
             logging.warning(f"Failed to fetch {url}: {e}")
-        return url, None, time.perf_counter() - page_start
+        return url, None, time.perf_counter() - page_start, reason
 
 
 async def _fetch_one_http(
