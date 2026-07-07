@@ -6,6 +6,7 @@ def get_parser(site_name: str) -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=f"{site_name.title()} Scraper")
 
     parser.add_argument(
+        "-s",
         "--stage",
         type=int,
         nargs="+",
@@ -14,53 +15,62 @@ def get_parser(site_name: str) -> argparse.ArgumentParser:
         help="Stage(s) to run: 1 = link collection, 2 = raw data scraping (default: run both)",
     )
     parser.add_argument(
+        "-p",
         "--pages",
         type=int,
         default=None,
         help="Max number of pages to crawl (default: all pages)",
     )
     parser.add_argument(
+        "-l",
         "--links",
         type=Path,
         default=None,
         help="Path to link_collection folder for stage 2 (default: most recent run)",
     )
     parser.add_argument(
+        "-n",
         "--products",
         type=int,
         default=None,
         help="Global fallback cap per category when not set in --products-config (default: all)",
     )
     parser.add_argument(
+        "-pc",
         "--products-config",
         type=Path,
         default=Path(f"config/{site_name}_sampling.json"),
         help=f"Path to per-category sampling config JSON (default: config/{site_name}_sampling.json)",
     )
     parser.add_argument(
+        "-S",
         "--seed",
         type=int,
         default=42,
         help="Random seed for reproducible product sampling (default: 42)",
     )
     parser.add_argument(
+        "-m",
         "--max",
         action="store_true",
         help="Ignore all limits and scrape every product in every category",
     )
     parser.add_argument(
+        "-f",
         "--fetch-mode",
         choices=["http", "browser"],
         default=None,
         help="Override stage 2's fetch mode (default: whatever the adapter config specifies)",
     )
     parser.add_argument(
+        "-c",
         "--concurrency",
         type=int,
         default=None,
         help="Override stage 2's concurrency (default: whatever the adapter config specifies)",
     )
     parser.add_argument(
+        "-r",
         "--resume",
         type=str,
         default=None,
