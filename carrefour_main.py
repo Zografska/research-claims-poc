@@ -3,13 +3,13 @@ import json
 import logging
 from pathlib import Path
 
-from src.adapters.conad import CONAD
+from src.adapters.carrefour import CARREFOUR
 from src.stages.link_collector import collect_links
 from src.stages.raw_scraper import scrape_raw
 from src.utils.logger import setup_logger
 from src.utils.parser import get_parser
 
-LINK_COLLECTION_DIR = Path(__file__).resolve().parent / "link_collection" / "conad"
+LINK_COLLECTION_DIR = Path(__file__).resolve().parent / "link_collection" / "carrefour"
 
 
 def _resolve_links_folder(arg: Path | None) -> Path | None:
@@ -33,7 +33,7 @@ def _load_sampling_config(path: Path) -> dict:
 
 
 async def main():
-    parser = get_parser("conad")
+    parser = get_parser("carrefour")
     args = parser.parse_args()
 
     setup_logger()
@@ -41,7 +41,7 @@ async def main():
     stages = set(args.stage) if args.stage else {1, 2}
 
     if 1 in stages:
-        await collect_links(CONAD, max_pages=args.pages)
+        await collect_links(CARREFOUR, max_pages=args.pages)
 
     if 2 in stages:
         links_folder = _resolve_links_folder(args.links)
@@ -51,7 +51,7 @@ async def main():
         logging.info(f"Using links folder: {links_folder}")
         sampling_config = _load_sampling_config(args.products_config)
         await scrape_raw(
-            CONAD,
+            CARREFOUR,
             links_folder,
             sampling_config=sampling_config,
             fallback=args.products,

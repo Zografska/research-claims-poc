@@ -5,11 +5,13 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
+import httpx
 from bs4 import BeautifulSoup
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
+from src.utils.http_client import fetch_html, make_http_client
 from src.utils.storage import (
     fmt_duration,
     safe_filename,
@@ -19,6 +21,7 @@ from src.utils.storage import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LINK_COLLECTION_DIR = PROJECT_ROOT / "link_collection"
+
 
 def _log_page_summary(
     page: int,
@@ -37,7 +40,6 @@ def _log_page_summary(
         logging.info(f"  {cat}: {len(items)}")
 
 
-
 def _has_cards(html: str, cfg: SiteConfig) -> bool:
     return bool(BeautifulSoup(html, "html.parser").select(cfg.product_card_selector))
 
@@ -49,11 +51,6 @@ async def _fetch_page(
     page_num: int,
     max_retries: int = 3,
 ) -> str | None:
-    """
-    Fetch the current page using the persistent session.
-    For page 1: loads the catalogue URL fresh.
-    For page 2+: runs next_page_js on the existing tab without reloading.
-    """
     delays = [5, 10, 20]
 
     for attempt in range(max_retries):
@@ -100,9 +97,96 @@ def _flush(by_category: dict, out_folder: Path) -> None:
         write_json(path, products)
 
 
+async def _fetch_listing_page(
+    client: httpx.AsyncClient,
+    cfg: SiteConfig,
+    category_id: str,
+    start: int,
+    sem: asyncio.Semaphore,
+    pause: asyncio.Event,
+) -> list[dict]:
+    async with sem:
+        url = cfg.build_listing_url(cfg, category_id, start)
+        html = await fetch_html(client, url, pause)
+        await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
+        return cfg.parse_cards(html, cfg) if html else []
+
+
+async def _fetch_category_products(
+    client: httpx.AsyncClient,
+    cfg: SiteConfig,
+    category_id: str,
+    max_pages: int | None,
+    sem: asyncio.Semaphore,
+    pause: asyncio.Event,
+    by_category: dict[str, list],
+    out_folder: Path,
+) -> list[dict]:
+    first_url = cfg.build_listing_url(cfg, category_id, 0)
+    html = await fetch_html(client, first_url, pause)
+    if html is None:
+        return []
+
+    total = cfg.get_product_count(html)
+    by_category[category_id] = cfg.parse_cards(html, cfg)
+    _flush(by_category, out_folder)
+
+    starts = list(range(cfg.page_size, total, cfg.page_size))
+    if max_pages:
+        starts = starts[: max_pages - 1]  # page 1 already fetched above
+
+    tasks = [_fetch_listing_page(client, cfg, category_id, start, sem, pause) for start in starts]
+    for coro in asyncio.as_completed(tasks):
+        page_products = await coro
+        by_category[category_id].extend(page_products)
+        _flush(by_category, out_folder)
+
+    return by_category[category_id]
+
+
+async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> Path:
+    out_folder = timestamped_folder(LINK_COLLECTION_DIR, cfg.name)
+    run_start = time.perf_counter()
+    all_products: list[dict] = []
+    by_category: dict[str, list] = defaultdict(list)
+    pause = asyncio.Event()
+    pause.set()
+
+    async with make_http_client(cfg) as client:
+        logging.info(f"Discovering categories from {cfg.bootstrap_url}")
+        bootstrap_html = await fetch_html(client, cfg.bootstrap_url, pause)
+        if bootstrap_html is None:
+            logging.error("Failed to load bootstrap page. Aborting.")
+            return out_folder
+
+        categories = cfg.discover_categories(bootstrap_html, cfg)
+        logging.info(f"Discovered {len(categories)} categories: {categories}")
+
+        sem = asyncio.Semaphore(cfg.concurrency)
+
+        for i, category_id in enumerate(categories, start=1):
+            cat_start = time.perf_counter()
+            products = await _fetch_category_products(
+                client, cfg, category_id, max_pages, sem, pause, by_category, out_folder
+            )
+            all_products.extend(products)
+            logging.info(
+                f"Category {i}/{len(categories)} '{category_id}' — {len(products)} products "
+                f"| {fmt_duration(time.perf_counter() - cat_start)} total "
+                f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
+            )
+            await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
+
+    logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
+    return out_folder
+
+
 async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
     if cfg.parse_cards is None:
         raise ValueError(f"Adapter '{cfg.name}' does not define parse_cards")
+
+    if cfg.fetch_mode == "http":
+        return await _collect_links_http(cfg, max_pages)
 
     out_folder = timestamped_folder(LINK_COLLECTION_DIR, cfg.name)
     browser_cfg = make_browser_config(cfg)
@@ -143,9 +227,7 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
         # Pages 2+: click next on the same tab
         for page in range(2, total_pages + 1):
             page_start = time.perf_counter()
-            html = await _fetch_page(
-                crawler, cfg, js_code=cfg.next_page_js, page_num=page
-            )
+            html = await _fetch_page(crawler, cfg, js_code=cfg.next_page_js, page_num=page)
             if html is None:
                 logging.warning(f"Skipping page {page} after all retries failed")
                 continue
@@ -169,7 +251,5 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
             await asyncio.sleep(delay)
 
     _flush(by_category, out_folder)
-    logging.info(
-        f"Stage 1 complete — {len(all_products)} total products → {out_folder}"
-    )
+    logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
     return out_folder

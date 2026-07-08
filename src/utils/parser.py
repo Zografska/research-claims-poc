@@ -2,8 +2,8 @@ import argparse
 from pathlib import Path
 
 
-def get_conad_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Conad Scraper")
+def get_parser(site_name: str) -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description=f"{site_name.title()} Scraper")
 
     parser.add_argument(
         "--stage",
@@ -34,8 +34,8 @@ def get_conad_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--products-config",
         type=Path,
-        default=Path("config/conad_sampling.json"),
-        help="Path to per-category sampling config JSON (default: config/conad_sampling.json)",
+        default=Path(f"config/{site_name}_sampling.json"),
+        help=f"Path to per-category sampling config JSON (default: config/{site_name}_sampling.json)",
     )
     parser.add_argument(
         "--seed",
