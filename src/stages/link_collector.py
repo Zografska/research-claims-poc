@@ -152,7 +152,7 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
 
     async with make_http_client(cfg) as client:
         logging.info(f"Discovering categories from {cfg.bootstrap_url}")
-        bootstrap_html = await fetch_html(client, cfg.bootstrap_url, pause)
+        bootstrap_html, _ = await fetch_html(client, cfg.bootstrap_url, pause)
         if bootstrap_html is None:
             logging.error("Failed to load bootstrap page. Aborting.")
             return out_folder
