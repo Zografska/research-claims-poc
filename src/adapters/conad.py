@@ -38,6 +38,7 @@ def _parse_conad_cards(html: str, cfg: SiteConfig) -> list[dict]:
 
         products.append(
             {
+                "product_id": data.get("code", ""),
                 "code": data.get("code", ""),
                 "name": data.get("nome", ""),
                 "brand": data.get("marchio", ""),
@@ -105,9 +106,7 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
             if text:
                 sub_sections[current_key] = (sub_sections.get(current_key, "") + " " + text).strip()
 
-        result[section_key] = (
-            sub_sections if sub_sections else content.get_text(" ", strip=True)
-        )
+        result[section_key] = sub_sections if sub_sections else content.get_text(" ", strip=True)
 
     return result
 
