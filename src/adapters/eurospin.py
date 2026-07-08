@@ -86,6 +86,7 @@ def _parse_eurospin_cards(html: str, cfg: SiteConfig) -> list[dict]:
 
         products.append(
             {
+                "product_id": str(product_id),
                 "ean": p.get("barcode", ""),
                 "name": p.get("name", ""),
                 "brand": vendor.get("name", ""),
@@ -123,17 +124,24 @@ def _parse_eurospin_product_page(html: str, cfg: SiteConfig) -> dict | None:
         return None
 
     d = data.get("data", {})
-    ean = d.get("barcode")
-    if not ean:
+    if not d.get("productId"):
         return None
 
-    result = {"ean": ean}
-    description = d.get("metaData", {}).get("product_description", {})
+    result = {"ean": d.get("barcode")}
+    meta_data = d.get("metaData", {})
+    for section_name, section in meta_data.items():
+        if section_name == "product_b2b" or not isinstance(section, dict):
+            continue
+        _extract_metadata_fields(section, result)
 
-    for key, value in description.items():
+    return result
+
+
+def _extract_metadata_fields(section: dict, result: dict) -> None:
+    for key, value in section.items():
         if not value:
             continue
-        section_key = key.lower()
+        field_key = key.lower()
 
         if isinstance(value, str):
             try:
@@ -144,20 +152,18 @@ def _parse_eurospin_product_page(html: str, cfg: SiteConfig) -> dict | None:
             if isinstance(parsed, dict) and parsed.get("type") == "TABLE_TEXTUAL":
                 flattened = _flatten_table(parsed)
                 if flattened:
-                    result[section_key] = flattened
+                    result[field_key] = flattened
                 continue
 
             if isinstance(parsed, list):
-                result[section_key] = [item.get("label", item) if isinstance(item, dict) else item for item in parsed]
+                result[field_key] = [item.get("label", item) if isinstance(item, dict) else item for item in parsed]
                 continue
 
             text = BeautifulSoup(value, "html.parser").get_text(" ", strip=True)
             if text:
-                result[section_key] = text
+                result[field_key] = text
         else:
-            result[section_key] = value
-
-    return result
+            result[field_key] = value
 
 
 EUROSPIN = SiteConfig(
