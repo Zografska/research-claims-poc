@@ -64,6 +64,14 @@ Conad's Stage 1 always uses a real browser. Stage 2 can use either engine — se
 
 Stage 2 also includes a circuit breaker that pauses or aborts a run automatically when it detects signs of anti-bot blocking — see `--breaker-*` flags below.
 
+### Eurospin
+
+Same commands and arguments as Conad, using `eurospin_main.py`.
+
+Eurospin runs entirely over its own JSON API (`ebsn`, the same backend platform Coop uses) rather than scraping rendered HTML — both stages use `--fetch-mode http`-equivalent behavior by default. Categories are discovered from `category.xml`, filtered to leaf categories only, and empty/non-product categories (account pages, region pages, etc.) are dropped automatically.
+
+Like Carrefour, `--pages` applies per category.
+
 ### Output
 
 **Conad — Stage 1** writes one JSON file per category under:
@@ -89,13 +97,17 @@ raw_data/conad/DD.MM_HH/
   run_failures.json
 ```
 
-`run_failures.json` lists every failed product with its category, URL, and reason (`rate_limited`, `forbidden`, `http_<code>`, an exception type, `parse_failed`, or `no_ean`).
+`run_failures.json` lists every failed product with its category, URL, and reason (`rate_limited`, `forbidden`, `http_<code>`, an exception type, `parse_failed`, or `no_product_id`).
 
-Each product record contains: `ean`, `scraped_at`, `code`, `name`, `url`, and all accordion sections extracted from the product page (e.g. `ingredienti`, `valori_nutrizionali`, `tracciabilita_e_avvertenze`).
+Each product record contains: `product_id`, `ean`, `scraped_at`, `code`, `name`, `url`, and all accordion sections extracted from the product page. `product_id` is always present and keys the record/image; `ean` is `null` when the site has no barcode for that product — it's no longer dropped for that reason alone.
 
-**Carrefour — Stage 1** writes one JSON file per department under `link_collection/carrefour/DD.MM_HH/`. Product stubs already include `ean` (Carrefour exposes it in the listing, unlike Conad): `ean`, `name`, `brand`, `category_l1`, `category_l2`, `category_l3`, `base_price`, `list_price`, `weight`, `image_url`, `product_url`.
+**Carrefour — Stage 1** writes one JSON file per department under `link_collection/carrefour/DD.MM_HH/`: `product_id`, `ean`, `name`, `brand`, `category_l1/l2/l3`, `base_price`, `list_price`, `weight`, `image_url`, `product_url`.
 
-**Carrefour — Stage 2** writes to `raw_data/carrefour/DD.MM_HH/` in the same layout as Conad. Each product record contains `ean`, `scraped_at`, `code`, `name`, `url`, plus the site's own claims fields verbatim: `C4_SalesDenomination`, `labeledIngredients`, `nutritionInfo`, `C4_Allergens`, `C4_Storage`, `C4_Origin`, `C4_RecyclingInfo`, and others.
+**Carrefour — Stage 2** writes to `raw_data/carrefour/DD.MM_HH/` in the same layout as Conad, plus the site's own claims fields verbatim (`C4_SalesDenomination`, `labeledIngredients`, `nutritionInfo`, `C4_Allergens`, `C4_Origin`, etc.).
+
+**Eurospin — Stage 1** writes one JSON file per top-level category under `link_collection/eurospin/DD.MM_HH/` (e.g. `bevande.json`), named after the category as shown on the site rather than its numeric ID, deduplicated by `ean` as it writes.
+
+**Eurospin — Stage 2** writes to `raw_data/eurospin/DD.MM_HH/` in the same layout, with every field from the site's product metadata (description, technical specs, allergens, nutrition, certifications) flattened into plain keys.
 
 `run_summary.json` is written after every product and updated on completion with start time, end time, duration, and per-category counts. `status` is `in_progress` while running, `complete` on a normal finish, or `circuit_broken` if the breaker aborted the run.
 
@@ -110,6 +122,7 @@ src/
   utils/       ← shared helpers (browser, http_client, storage, logger, parser)
 conad_main.py      ← entry point for Conad
 carrefour_main.py  ← entry point for Carrefour
+eurospin_main.py   ← entry point for Eurospin
 ```
 
 ## Development
