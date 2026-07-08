@@ -38,6 +38,7 @@ class SiteConfig:
     discover_categories: Optional[Callable] = None
     build_listing_url: Optional[Callable] = None
     get_product_count: Optional[Callable] = None
+    group_key: Optional[Callable] = None
 
     breaker_rate_limited_threshold: int = 3
     breaker_window_minutes: int = 10
