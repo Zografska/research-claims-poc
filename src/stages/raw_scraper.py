@@ -3,10 +3,12 @@ import json
 import logging
 import random
 import time
+from datetime import datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
+from bs4 import BeautifulSoup
 from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
@@ -42,24 +44,37 @@ async def _fetch_one(
     cfg: SiteConfig,
     url: str,
     sem: asyncio.Semaphore,
-) -> tuple[str, object, float]:
+) -> tuple[str, object, float, str | None]:
     async with sem:
         page_start = time.perf_counter()
+        reason = None
         try:
             run_cfg = CrawlerRunConfig(
                 js_code=cfg.cookie_js or "",
                 page_timeout=60000,
                 wait_until="domcontentloaded",
-                wait_for="css:main[data-product]",
             )
             result = await crawler.arun(url, config=run_cfg)
-            if result.success and result.html:
+            html = result.html or ""
+
+            if html and BeautifulSoup(html, "html.parser").select_one(f"[{cfg.detail_data_attr}]"):
                 await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
-                return url, result, time.perf_counter() - page_start
-            logging.warning(f"Empty result for {url}")
+                return url, result, time.perf_counter() - page_start, None
+
+            status = getattr(result, "status_code", None)
+            if status == 429:
+                reason = "rate_limited"
+            elif status == 403 or "access denied" in html.lower():
+                reason = "forbidden"
+            elif status and status != 200:
+                reason = f"http_{status}"
+            else:
+                reason = "no_selector_found"
+            logging.warning(f"{reason} for {url} (status={status})")
         except Exception as e:
+            reason = type(e).__name__
             logging.warning(f"Failed to fetch {url}: {e}")
-        return url, None, time.perf_counter() - page_start
+        return url, None, time.perf_counter() - page_start, reason
 
 
 async def _fetch_one_http(
@@ -68,13 +83,13 @@ async def _fetch_one_http(
     url: str,
     sem: asyncio.Semaphore,
     pause: asyncio.Event,
-) -> tuple[str, object, float]:
+) -> tuple[str, object, float, str | None]:
     async with sem:
         page_start = time.perf_counter()
-        html = await fetch_html(client, url, pause)
+        html, fail_reason = await fetch_html(client, url, pause)
         await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
         result = SimpleNamespace(success=True, html=html) if html else None
-        return url, result, time.perf_counter() - page_start
+        return url, result, time.perf_counter() - page_start, fail_reason
 
 
 def _resolve_todo(
@@ -96,9 +111,31 @@ def _resolve_todo(
     if limit is None or limit >= len(products):
         return [p for p in products if p.get("product_url") not in done_urls]
 
-    # Sample from full list first for reproducibility, then filter done
     sample = random.Random(seed).sample(products, limit)
     return [p for p in sample if p.get("product_url") not in done_urls]
+
+
+def _check_breaker(failures: list[dict], cfg: SiteConfig) -> tuple[str, str] | None:
+    if not failures:
+        return None
+
+    latest = failures[-1]
+    if latest["reason"] == "forbidden":
+        return "abort", "got 'forbidden' (403)"
+
+    if latest["reason"] == "rate_limited":
+        window_start = now_rome() - timedelta(minutes=cfg.breaker_window_minutes)
+        recent = [
+            f
+            for f in failures
+            if f["reason"] == "rate_limited" and datetime.fromisoformat(f["failed_at"]) >= window_start
+        ]
+        if len(recent) >= cfg.breaker_rate_limited_threshold:
+            return "pause", f"{len(recent)} rate_limited failures in the last {cfg.breaker_window_minutes} minutes"
+
+    return None
+
+    return None
 
 
 async def scrape_raw(
@@ -108,11 +145,13 @@ async def scrape_raw(
     fallback: int | None = None,
     seed: int = 42,
     use_max: bool = False,
+    resume_folder: Path | None = None,
 ) -> Path:
     if cfg.parse_product_page is None:
         raise ValueError(f"Adapter '{cfg.name}' does not define parse_product_page")
 
-    out_folder = timestamped_folder(RAW_DATA_DIR, cfg.name)
+    mode = cfg.raw_fetch_mode or cfg.fetch_mode
+    out_folder = resume_folder if resume_folder else timestamped_folder(RAW_DATA_DIR, cfg.name)
     run_start = time.perf_counter()
     sem = asyncio.Semaphore(cfg.concurrency)
     pause = asyncio.Event()
@@ -127,10 +166,17 @@ async def scrape_raw(
             pass
     started_at_str = existing_summary.get("started_at") or now_rome().isoformat(timespec="seconds")
 
+    failures_path = out_folder / "run_failures.json"
+    failures: list[dict] = []
+    if failures_path.exists():
+        try:
+            failures = json.loads(failures_path.read_text(encoding="utf-8"))
+        except Exception:
+            failures = []
+
     category_files = sorted(links_folder.glob("*.json"))
     logging.info(f"Found {len(category_files)} categories in {links_folder}")
 
-    # Pre-compute todos for all categories to get global total upfront
     category_plan = []
     for cat_file in category_files:
         category = cat_file.stem
@@ -154,10 +200,11 @@ async def scrape_raw(
     global_total = sum(len(todo) for _, _, _, _, todo in category_plan)
     logging.info(f"Total products to scrape this run: {global_total}")
 
-    total_ok, total_fail = 0, 0
-    cat_stats: dict[str, dict] = {}
+    total_ok = existing_summary.get("total_ok", 0)
+    total_fail = existing_summary.get("total_failed", 0)
+    cat_stats: dict[str, dict] = dict(existing_summary.get("categories", {}))
 
-    if cfg.fetch_mode == "http":
+    if mode == "http":
         conn_cm = make_http_client(cfg)
     else:
         conn_cm = AsyncWebCrawler(config=make_browser_config(cfg))
@@ -170,7 +217,12 @@ async def scrape_raw(
 
             if not todo:
                 logging.info(f"{category}: already complete, skipping")
-                cat_stats[category] = {"ok": 0, "failed": 0, "skipped": True}
+                prior = cat_stats.get(category, {"ok": 0, "failed": 0})
+                cat_stats[category] = {
+                    "ok": prior.get("ok", 0),
+                    "failed": prior.get("failed", 0),
+                    "skipped": True,
+                }
                 continue
 
             logging.info(f"{category}: {len(todo)} to scrape, {len(done_urls)} already done")
@@ -178,56 +230,79 @@ async def scrape_raw(
             records = json.loads(out_json.read_text(encoding="utf-8")) if out_json.exists() else []
             url_to_product = {p["product_url"]: p for p in todo}
             cat_start = time.perf_counter()
+            prior_ok = cat_stats.get(category, {}).get("ok", 0)
+            prior_fail = cat_stats.get(category, {}).get("failed", 0)
             cat_ok, cat_fail = 0, 0
 
-            if cfg.fetch_mode == "http":
-                tasks = [_fetch_one_http(conn, cfg, p["product_url"], sem, pause) for p in todo]
+            if mode == "http":
+                tasks = [asyncio.create_task(_fetch_one_http(conn, cfg, p["product_url"], sem, pause)) for p in todo]
             else:
-                tasks = [_fetch_one(conn, cfg, p["product_url"], sem) for p in todo]
+                tasks = [asyncio.create_task(_fetch_one(conn, cfg, p["product_url"], sem)) for p in todo]
+            breaker_action = None
             for coro in asyncio.as_completed(tasks):
-                url, result, page_time = await coro
+                url, result, page_time, fetch_fail_reason = await coro
                 product = url_to_product[url]
+                ean = None
+                fail_reason = None
 
                 if not result or not result.success or not result.html:
                     logging.warning(f"Skipping {url}")
+                    fail_reason = fetch_fail_reason or "fetch_failed"
+                else:
+                    parsed = cfg.parse_product_page(result.html, cfg)
+                    if not parsed:
+                        logging.warning(f"No content parsed from {url}")
+                        fail_reason = "parse_failed"
+                    else:
+                        ean = parsed.pop("ean", None)
+                        if not ean:
+                            logging.warning(f"No EAN at {url}")
+                            fail_reason = "no_ean"
+
+                if ean:
+                    img_path = img_folder / f"{ean}.jpg"
+                    if not img_path.exists() and product.get("image_url"):
+                        await _download_image(product["image_url"], img_path)
+
+                    record = {
+                        "ean": ean,
+                        "scraped_at": now_rome().isoformat(timespec="seconds"),
+                        "code": product.get("code", ""),
+                        "name": product.get("name", ""),
+                        "url": url,
+                        **parsed,
+                    }
+                    records.append(record)
+                    write_json(out_json, records)
+                    cat_ok += 1
+                    total_ok += 1
+                    logging.info(
+                        f"  [{total_ok + total_fail}/{global_total}] {ean} — {product.get('name', '')} "
+                        f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
+                    )
+                else:
                     cat_fail += 1
                     total_fail += 1
-                    continue
+                    logging.info(
+                        f"  [{total_ok + total_fail}/{global_total}] FAILED {url} ({fail_reason}) "
+                        f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
+                    )
+                    failures.append(
+                        {
+                            "category": category,
+                            "url": url,
+                            "code": product.get("code", ""),
+                            "name": product.get("name", ""),
+                            "reason": fail_reason,
+                            "failed_at": now_rome().isoformat(timespec="seconds"),
+                        }
+                    )
+                    write_json(failures_path, failures)
+                    breaker_result = _check_breaker(failures, cfg)
+                    if breaker_result:
+                        breaker_action, breaker_message = breaker_result
+                        logging.warning(f"Circuit breaker tripped: {breaker_message}")
 
-                parsed = cfg.parse_product_page(result.html, cfg)
-                if not parsed:
-                    logging.warning(f"No content parsed from {url}")
-                    cat_fail += 1
-                    total_fail += 1
-                    continue
-
-                ean = parsed.pop("ean", None)
-                if not ean:
-                    logging.warning(f"No EAN at {url}")
-                    cat_fail += 1
-                    total_fail += 1
-                    continue
-
-                img_path = img_folder / f"{ean}.jpg"
-                if not img_path.exists() and product.get("image_url"):
-                    await _download_image(product["image_url"], img_path)
-
-                record = {
-                    "ean": ean,
-                    "scraped_at": now_rome().isoformat(timespec="seconds"),
-                    "code": product.get("code", ""),
-                    "name": product.get("name", ""),
-                    "url": url,
-                    **parsed,
-                }
-                records.append(record)
-                write_json(out_json, records)
-                cat_ok += 1
-                total_ok += 1
-                logging.info(
-                    f"  [{total_ok}/{global_total}] {ean} — {product.get('name', '')} "
-                    f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
-                )
                 write_json(
                     summary_path,
                     {
@@ -237,15 +312,44 @@ async def scrape_raw(
                         "total_failed": total_fail,
                         "categories": {
                             **cat_stats,
-                            category: {"ok": cat_ok, "failed": cat_fail},
+                            category: {"ok": prior_ok + cat_ok, "failed": prior_fail + cat_fail},
                         },
                     },
                 )
 
-            cat_stats[category] = {"ok": cat_ok, "failed": cat_fail}
+                if breaker_action:
+                    for t in tasks:
+                        if not t.done():
+                            t.cancel()
+                    await asyncio.gather(*tasks, return_exceptions=True)
+                    break
+
+            cat_stats[category] = {"ok": prior_ok + cat_ok, "failed": prior_fail + cat_fail}
             logging.info(
                 f"{category}: {cat_ok} ok, {cat_fail} failed | {fmt_duration(time.perf_counter() - cat_start)}"
             )
+
+            if breaker_action == "abort":
+                ended_at = now_rome().isoformat(timespec="seconds")
+                write_json(
+                    summary_path,
+                    {
+                        "status": "circuit_broken",
+                        "started_at": started_at_str,
+                        "ended_at": ended_at,
+                        "duration": fmt_duration(time.perf_counter() - run_start),
+                        "total_ok": total_ok,
+                        "total_failed": total_fail,
+                        "categories": cat_stats,
+                    },
+                )
+                logging.error(f"Circuit breaker aborted the run → {out_folder}. Resume later with --resume.")
+                return out_folder
+
+            if breaker_action == "pause":
+                logging.warning(f"Circuit breaker pausing for {cfg.breaker_pause_minutes} minutes...")
+                await asyncio.sleep(cfg.breaker_pause_minutes * 60)
+                logging.info("Circuit breaker pause finished, resuming.")
 
     ended_at = now_rome().isoformat(timespec="seconds")
     summary = {

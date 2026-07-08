@@ -61,7 +61,6 @@ def _parse_conad_cards(html: str, cfg: SiteConfig) -> list[dict]:
 def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
     soup = BeautifulSoup(html, "html.parser")
 
-    # EAN from main[data-product]
     main = soup.find("main", attrs={"data-product": True})
     if not main:
         return None
@@ -72,7 +71,6 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
 
     result = {"ean": ean}
 
-    # Dynamically extract accordion sections
     for title_el in soup.select("div.uk-accordion-title"):
         section_key = title_el.get_text(strip=True).lower().replace(" ", "_")
         content = title_el.find_next_sibling("div", class_="uk-accordion-content")
@@ -84,20 +82,28 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
             result[section_key] = content.get_text(" ", strip=True)
             continue
 
-        # Pair each p.no-margin-bottom header with the following html-esb-field
         sub_sections = {}
         current_key = None
         for child in sub_sections_container.children:
             if not hasattr(child, "name") or child.name is None:
                 continue
-            if child.name == "p" and "no-margin-bottom" in child.get("class", []):
+
+            if child.name == "p":
                 b = child.find("b")
-                if b:
+                if b and b.get_text(strip=True) == child.get_text(strip=True):
                     current_key = b.get_text(strip=True).lower().replace(" ", "_")
-            elif child.name == "div" and "html-esb-field" in child.get("class", []):
-                if current_key:
-                    sub_sections[current_key] = child.get_text(" ", strip=True)
-                    current_key = None
+                    continue
+
+            if current_key is None:
+                continue
+
+            text = child.get_text(" ", strip=True)
+            if not text:
+                images = [child] if child.name == "img" else child.find_all("img")
+                text = " ".join(img.get("alt") or img.get("title") or "" for img in images).strip()
+
+            if text:
+                sub_sections[current_key] = (sub_sections.get(current_key, "") + " " + text).strip()
 
         result[section_key] = (
             sub_sections if sub_sections else content.get_text(" ", strip=True)
@@ -109,15 +115,12 @@ def _parse_conad_product_page(html: str, cfg: SiteConfig) -> dict | None:
 CONAD = SiteConfig(
     name="conad",
     base_url="https://spesaonline.conad.it",
-    # Stage 1 — listing page
     catalogue_url="https://spesaonline.conad.it/tutti-i-prodotti",
     category_param="cat_lev1",
     product_card_selector="div[data-product]",
     badge_selector=".badge-territorio .text",
-    # Stage 2 — product detail page
     detail_description_selector="div.caratteristiche, div.product-other-info",
     detail_data_attr="data-product",
-    # Browser
     cookie_js="""
 (async () => {
     const btn = document.getElementById('onetrust-accept-btn-handler');
@@ -137,7 +140,8 @@ CONAD = SiteConfig(
     page_param="page",
     first_page=1,
     session_id="conad_catalogue",
-    # Site-specific logic
+    raw_fetch_mode="browser",
+    concurrency=1,
     next_page_js="""
 (async () => {
     const btn = document.querySelector('a[aria-label="Pagina Successiva"]');
