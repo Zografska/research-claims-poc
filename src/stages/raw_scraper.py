@@ -262,6 +262,10 @@ async def scrape_raw(
                             fail_reason = "no_product_id"
 
                 if product_id:
+                    if any(f["url"] == url for f in failures):
+                        failures = [f for f in failures if f["url"] != url]
+                        write_json(failures_path, failures)
+
                     img_path = img_folder / f"{product_id}.jpg"
                     if not img_path.exists() and product.get("image_url"):
                         await _download_image(product["image_url"], img_path)
