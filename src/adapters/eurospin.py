@@ -87,7 +87,7 @@ def _parse_eurospin_cards(html: str, cfg: SiteConfig) -> list[dict]:
         products.append(
             {
                 "product_id": str(product_id),
-                "ean": p.get("barcode", ""),
+                "ean": str(p.get("barcode")) if p.get("barcode") else None,
                 "name": p.get("name", ""),
                 "brand": vendor.get("name", ""),
                 "category_l1": crumb_names[0] if len(crumb_names) > 0 else "",
@@ -127,7 +127,7 @@ def _parse_eurospin_product_page(html: str, cfg: SiteConfig) -> dict | None:
     if not d.get("productId"):
         return None
 
-    result = {"ean": d.get("barcode")}
+    result = {"ean": str(d.get("barcode")) if d.get("barcode") else None}
     meta_data = d.get("metaData", {})
     for section_name, section in meta_data.items():
         if section_name == "product_b2b" or not isinstance(section, dict):
