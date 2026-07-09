@@ -48,8 +48,10 @@ async def fetch_html(
                 )
                 if pause.is_set():
                     pause.clear()
-                    await asyncio.sleep(wait_s)
-                    pause.set()
+                    try:
+                        await asyncio.sleep(wait_s)
+                    finally:
+                        pause.set()
                 continue
 
             last_reason = f"http_{r.status_code}"
