@@ -143,7 +143,7 @@ async def _fetch_category_products(
     _dedup_extend(by_category[group_key], first_products, seen_eans)
     _flush(by_category, out_folder)
 
-    starts = list(range(cfg.page_size, total, cfg.page_size))
+    starts = list(range(len(first_products), total, cfg.page_size))
     if max_pages:
         starts = starts[: max_pages - 1]
 
