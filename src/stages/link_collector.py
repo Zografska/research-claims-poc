@@ -95,6 +95,16 @@ def _flush(by_category: dict, out_folder: Path) -> None:
         write_json(path, products)
 
 
+def _dedup_extend(target: list, new_products: list[dict], seen_eans: set) -> None:
+    for p in new_products:
+        ean = p.get("ean")
+        if ean and ean in seen_eans:
+            continue
+        if ean:
+            seen_eans.add(ean)
+        target.append(p)
+
+
 async def _fetch_listing_page(
     client: httpx.AsyncClient,
     cfg: SiteConfig,
@@ -119,6 +129,7 @@ async def _fetch_category_products(
     pause: asyncio.Event,
     by_category: dict[str, list],
     out_folder: Path,
+    seen_eans: set,
 ) -> list[dict]:
     first_url = cfg.build_listing_url(cfg, category_id, 0)
     html, _ = await fetch_html(client, first_url, pause)
@@ -126,27 +137,30 @@ async def _fetch_category_products(
         return []
 
     total = cfg.get_product_count(html)
-    by_category[category_id] = cfg.parse_cards(html, cfg)
+    first_products = cfg.parse_cards(html, cfg)
+    group_key = cfg.group_key(category_id, first_products) if cfg.group_key else category_id
+
+    _dedup_extend(by_category[group_key], first_products, seen_eans)
     _flush(by_category, out_folder)
 
-    starts = list(range(cfg.page_size, total, cfg.page_size))
+    starts = list(range(len(first_products), total, cfg.page_size))
     if max_pages:
         starts = starts[: max_pages - 1]
 
     tasks = [_fetch_listing_page(client, cfg, category_id, start, sem, pause) for start in starts]
     for coro in asyncio.as_completed(tasks):
         page_products = await coro
-        by_category[category_id].extend(page_products)
+        _dedup_extend(by_category[group_key], page_products, seen_eans)
         _flush(by_category, out_folder)
 
-    return by_category[category_id]
+    return by_category[group_key]
 
 
 async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> Path:
     out_folder = timestamped_folder(LINK_COLLECTION_DIR, cfg.name)
     run_start = time.perf_counter()
-    all_products: list[dict] = []
     by_category: dict[str, list] = defaultdict(list)
+    seen_eans: set = set()
     pause = asyncio.Event()
     pause.set()
 
@@ -165,17 +179,17 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
         for i, category_id in enumerate(categories, start=1):
             cat_start = time.perf_counter()
             products = await _fetch_category_products(
-                client, cfg, category_id, max_pages, sem, pause, by_category, out_folder
+                client, cfg, category_id, max_pages, sem, pause, by_category, out_folder, seen_eans
             )
-            all_products.extend(products)
             logging.info(
-                f"Category {i}/{len(categories)} '{category_id}' — {len(products)} products "
+                f"Category {i}/{len(categories)} '{category_id}' — {len(products)} products so far in its group "
                 f"| {fmt_duration(time.perf_counter() - cat_start)} total "
                 f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
             )
             await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
 
-    logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
+    total_products = sum(len(v) for v in by_category.values())
+    logging.info(f"Stage 1 complete — {total_products} total products → {out_folder}")
     return out_folder
 
 

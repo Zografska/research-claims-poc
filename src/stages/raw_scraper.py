@@ -242,6 +242,7 @@ async def scrape_raw(
             for coro in asyncio.as_completed(tasks):
                 url, result, page_time, fetch_fail_reason = await coro
                 product = url_to_product[url]
+                product_id = None
                 ean = None
                 fail_reason = None
 
@@ -255,16 +256,22 @@ async def scrape_raw(
                         fail_reason = "parse_failed"
                     else:
                         ean = parsed.pop("ean", None)
-                        if not ean:
-                            logging.warning(f"No EAN at {url}")
-                            fail_reason = "no_ean"
+                        product_id = product.get("product_id")
+                        if not product_id:
+                            logging.warning(f"No product_id at {url}")
+                            fail_reason = "no_product_id"
 
-                if ean:
-                    img_path = img_folder / f"{ean}.jpg"
+                if product_id:
+                    if any(f["url"] == url for f in failures):
+                        failures = [f for f in failures if f["url"] != url]
+                        write_json(failures_path, failures)
+
+                    img_path = img_folder / f"{product_id}.jpg"
                     if not img_path.exists() and product.get("image_url"):
                         await _download_image(product["image_url"], img_path)
 
                     record = {
+                        "product_id": product_id,
                         "ean": ean,
                         "scraped_at": now_rome().isoformat(timespec="seconds"),
                         "code": product.get("code", ""),
@@ -277,7 +284,7 @@ async def scrape_raw(
                     cat_ok += 1
                     total_ok += 1
                     logging.info(
-                        f"  [{total_ok + total_fail}/{global_total}] {ean} — {product.get('name', '')} "
+                        f"  [{total_ok + total_fail}/{global_total}] {product_id} — {product.get('name', '')} "
                         f"| page {fmt_duration(page_time)} | uptime {fmt_duration(time.perf_counter() - run_start)}"
                     )
                 else:

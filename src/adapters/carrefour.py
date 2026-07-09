@@ -79,6 +79,7 @@ def _parse_carrefour_cards(html: str, cfg: SiteConfig) -> list[dict]:
 
         products.append(
             {
+                "product_id": card.get("data-pid", ""),
                 "ean": card.get("data-pid", ""),
                 "name": data.get("name", ""),
                 "brand": data.get("brand", ""),
