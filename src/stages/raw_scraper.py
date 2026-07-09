@@ -14,7 +14,8 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
 from src.utils.http_client import fetch_html, make_http_client
-from src.utils.storage import fmt_duration, now_rome, timestamped_folder, write_json
+from src.utils.storage import timestamped_folder, write_json
+from src.utils.time import fmt_duration, now_rome
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 RAW_DATA_DIR = PROJECT_ROOT / "raw_data"
@@ -132,8 +133,6 @@ def _check_breaker(failures: list[dict], cfg: SiteConfig) -> tuple[str, str] | N
         ]
         if len(recent) >= cfg.breaker_rate_limited_threshold:
             return "pause", f"{len(recent)} rate_limited failures in the last {cfg.breaker_window_minutes} minutes"
-
-    return None
 
     return None
 

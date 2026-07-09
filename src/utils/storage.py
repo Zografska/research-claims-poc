@@ -1,18 +1,7 @@
 import json
-from datetime import datetime
 from pathlib import Path
-from zoneinfo import ZoneInfo
 
-TZ = ZoneInfo("Europe/Rome")
-
-
-def now_rome() -> datetime:
-    return datetime.now(tz=TZ)
-
-
-def fmt_duration(seconds: float) -> str:
-    m, s = divmod(int(seconds), 60)
-    return f"{m}m {s}s" if m else f"{s}s"
+from src.utils.time import now_rome
 
 
 def timestamped_folder(base: Path, site_name: str) -> Path:

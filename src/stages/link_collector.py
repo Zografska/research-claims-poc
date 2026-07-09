@@ -13,11 +13,11 @@ from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
 from src.utils.http_client import fetch_html, make_http_client
 from src.utils.storage import (
-    fmt_duration,
     safe_filename,
     timestamped_folder,
     write_json,
 )
+from src.utils.time import fmt_duration
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 LINK_COLLECTION_DIR = PROJECT_ROOT / "link_collection"
