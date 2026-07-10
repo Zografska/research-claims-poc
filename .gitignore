@@ -33,3 +33,4 @@ build/
 *.egg-info/
 
 .claude/
+CLAUDE.md
