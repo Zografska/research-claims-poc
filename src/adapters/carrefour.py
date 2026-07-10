@@ -97,6 +97,65 @@ def _parse_carrefour_cards(html: str, cfg: SiteConfig) -> list[dict]:
     return products
 
 
+# data-option-product also carries session/UI/pricing/analytics state that isn't product content;
+# everything else is captured dynamically since a fixed field list was silently dropping real
+# claims fields (e.g. C4_MarketingProduct) that don't appear on every product type.
+_CARREFOUR_PRODUCT_PAGE_SKIP_FIELDS = {
+    "id",
+    "uuid",
+    "productName",
+    "productType",
+    "brand",
+    "available",
+    "online",
+    "readyToOrder",
+    "inWishlist",
+    "qtyincart",
+    "images",
+    "options",
+    "otherOptions",
+    "quantities",
+    "shippingOptions",
+    "infoFiles",
+    "specs",
+    "template",
+    "attributes",
+    "lifestyles",
+    "pageMetaTags",
+    "pageTitle",
+    "pageDescription",
+    "pageKeywords",
+    "impression",
+    "selectedProductUrl",
+    "rating",
+    "nrRatingCount",
+    "availability",
+    "price",
+    "basePrice",
+    "unitPrice",
+    "unitData",
+    "variableWeight",
+    "discountPercentage",
+    "promoCat",
+    "promoMarker",
+    "promotions",
+    "promotionInfo",
+    "priceBookInfo",
+    "breadcrumbs",
+    "isFood",
+    "isCopromar",
+    "isPascol",
+    "C4_ReturnTo",
+    "C4_WebAddress",
+    "C4_PhoneSupport",
+    "C4_EMailSupport",
+    "C4_DealerAddress",
+    "C4_Hidden",
+    "C4_IsShoppingBag",
+    "C4_CGLimitation",
+}
+
+
 def _parse_carrefour_product_page(html: str, cfg: SiteConfig) -> dict | None:
     soup = BeautifulSoup(html, "html.parser")
 
@@ -112,25 +171,8 @@ def _parse_carrefour_product_page(html: str, cfg: SiteConfig) -> dict | None:
     if not ean:
         return None
 
-    fields = [
-        "C4_SalesDenomination",
-        "labeledIngredients",
-        "nutritionInfo",
-        "C4_Allergens",
-        "C4_Storage",
-        "C4_StorageMethod",
-        "C4_StorageAndUseInfo",
-        "C4_DurabilityAfterOpening",
-        "C4_SafetyWarnings",
-        "C4_Origin",
-        "C4_Country",
-        "C4_RecyclingInfo",
-        "C4_RecyclingMoreText",
-        "C4_ManufacturesAddress",
-        "primaryCategory",
-        "primaryCategoryName",
-    ]
-    return {"ean": ean, **{f: data.get(f) for f in fields}}
+    claims = {k: v for k, v in data.items() if k not in _CARREFOUR_PRODUCT_PAGE_SKIP_FIELDS and v}
+    return {"ean": ean, **claims}
 
 
 CARREFOUR = SiteConfig(
