@@ -11,6 +11,7 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
+from src.utils.discord import notify_discord
 from src.utils.http_client import fetch_html, make_http_client
 from src.utils.storage import (
     safe_filename,
@@ -161,21 +162,26 @@ async def _fetch_category_products(
 
 async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> Path:
     out_folder = timestamped_folder(LINK_COLLECTION_DIR, cfg.name)
+    site = cfg.name.capitalize()
     run_start = time.perf_counter()
     by_category: dict[str, list] = defaultdict(list)
     seen_eans: set = set()
     pause = asyncio.Event()
     pause.set()
 
+    await notify_discord(f"▶️ **{site} — Stage 1 started**\n→ `{out_folder}`", "start")
+
     async with make_http_client(cfg) as client:
         logging.info(f"Discovering categories from {cfg.bootstrap_url}")
         bootstrap_html, _ = await fetch_html(client, cfg.bootstrap_url, pause)
         if bootstrap_html is None:
             logging.error("Failed to load bootstrap page. Aborting.")
+            await notify_discord(f"❌ **{site} — Stage 1 failed**\nCould not load bootstrap page", "error")
             return out_folder
 
         categories = cfg.discover_categories(bootstrap_html, cfg)
         logging.info(f"Discovered {len(categories)} categories: {categories}")
+        checkpoint_interval = max(1, len(categories) // 5)
 
         sem = asyncio.Semaphore(cfg.concurrency)
 
@@ -194,9 +200,23 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
                 f"| {fmt_duration(cat_elapsed)} total "
                 f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
             )
+            if i % checkpoint_interval == 0:
+                asyncio.create_task(
+                    notify_discord(
+                        f"📊 **{site} — Stage 1 health check**\n"
+                        f"{i}/{len(categories)} categories done | *uptime {fmt_duration(time.perf_counter() - run_start)}*",
+                        "checkpoint",
+                    )
+                )
 
     total_products = sum(len(v) for v in by_category.values())
     logging.info(f"Stage 1 complete — {total_products} total products → {out_folder}")
+    await notify_discord(
+        f"✅ **{site} — Stage 1 complete**\n"
+        f"{len(categories)} categories, {total_products} products | *{fmt_duration(time.perf_counter() - run_start)}*\n"
+        f"→ `{out_folder}`",
+        "success",
+    )
     return out_folder
 
 
@@ -208,6 +228,7 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
         return await _collect_links_http(cfg, max_pages)
 
     out_folder = timestamped_folder(LINK_COLLECTION_DIR, cfg.name)
+    site = cfg.name.capitalize()
     browser_cfg = make_browser_config(cfg)
     all_products: list[dict] = []
 
@@ -219,12 +240,14 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
         html = await _fetch_page(crawler, cfg, js_code=cfg.cookie_js or "", page_num=1)
         if html is None:
             logging.error("Failed to load catalogue page. Aborting.")
+            await notify_discord(f"❌ **{site} — Stage 1 failed**\nCould not load catalogue page", "error")
             return out_folder
 
         total_pages = cfg.get_total_pages(html) if cfg.get_total_pages else 1
         if max_pages:
             total_pages = min(max_pages, total_pages)
         logging.info(f"Total pages to crawl: {total_pages}")
+        await notify_discord(f"▶️ **{site} — Stage 1 started**\n{total_pages} pages to crawl\n→ `{out_folder}`", "start")
 
         products = cfg.parse_cards(html, cfg)
         all_products.extend(products)
@@ -269,4 +292,10 @@ async def collect_links(cfg: SiteConfig, max_pages: int | None = None) -> Path:
 
     _flush(by_category, out_folder)
     logging.info(f"Stage 1 complete — {len(all_products)} total products → {out_folder}")
+    await notify_discord(
+        f"✅ **{site} — Stage 1 complete**\n"
+        f"{len(by_category)} categories, {len(all_products)} products | *{fmt_duration(time.perf_counter() - run_start)}*\n"
+        f"→ `{out_folder}`",
+        "success",
+    )
     return out_folder
