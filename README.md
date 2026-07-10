@@ -72,6 +72,14 @@ Eurospin runs entirely over its own JSON API (`ebsn`, the same backend platform 
 
 Like Carrefour, `--pages` applies per category.
 
+### Coop
+
+Same commands and arguments as Conad, using `coop_main.py`.
+
+Coop runs entirely over the `ebsn` JSON API (the same backend platform Eurospin uses). Categories are discovered from a sitemap (`sitemap/category.xml`), filtered to leaf categories only, then resolved to numeric category IDs and probed to drop empty categories — the same two-step pattern as Eurospin.
+
+Like Carrefour and Eurospin, `--pages` applies per category. Coop exposes no price to anonymous requests, so `base_price` is always `null` in the output.
+
 ### Output
 
 **Conad — Stage 1** writes one JSON file per category under:
@@ -109,6 +117,10 @@ Each product record contains: `product_id`, `ean`, `scraped_at`, `code`, `name`,
 
 **Eurospin — Stage 2** writes to `raw_data/eurospin/DD.MM_HH/` in the same layout, with every field from the site's product metadata (description, technical specs, allergens, nutrition, certifications) flattened into plain keys.
 
+**Coop — Stage 1** writes one JSON file per category under `link_collection/coop/DD.MM_HH/`, following the same shape as Eurospin's Stage 1 output.
+
+**Coop — Stage 2** writes to `raw_data/coop/DD.MM_HH/` in the same layout, with claims fields parsed from the site's raw HTML metadata fragments (tables, lists, or plain text) into plain keys.
+
 `run_summary.json` is written after every product and updated on completion with start time, end time, duration, and per-category counts. `status` is `in_progress` while running, `complete` on a normal finish, or `circuit_broken` if the breaker aborted the run.
 
 Both stages write incrementally — partial data is preserved if the run is interrupted. Re-running within the same hour resumes in the same output folder automatically; use `--resume` to continue a specific folder from a different hour.
@@ -123,6 +135,7 @@ src/
 conad_main.py      ← entry point for Conad
 carrefour_main.py  ← entry point for Carrefour
 eurospin_main.py   ← entry point for Eurospin
+coop_main.py       ← entry point for Coop
 ```
 
 ## Development
