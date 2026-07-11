@@ -84,6 +84,9 @@ def _parse_eurospin_cards(html: str, cfg: SiteConfig) -> list[dict]:
         crumb_names = [c.get("name", "") for c in (p.get("breadCrumbs") or [])]
         vendor = p.get("vendor") or {}
 
+        thumb_url = p.get("mediaURL", "")
+        image_url = thumb_url.replace("/main/thumb/", "/main/large/") if thumb_url else ""
+
         products.append(
             {
                 "product_id": str(product_id),
@@ -94,7 +97,7 @@ def _parse_eurospin_cards(html: str, cfg: SiteConfig) -> list[dict]:
                 "category_l2": crumb_names[1] if len(crumb_names) > 1 else "",
                 "category_l3": crumb_names[2] if len(crumb_names) > 2 else "",
                 "base_price": p.get("price", 0.0),
-                "image_url": p.get("mediaURL", ""),
+                "image_url": image_url,
                 "product_url": f"{cfg.base_url}/ebsn/api/products/{product_id}",
             }
         )
@@ -128,6 +131,11 @@ def _parse_eurospin_product_page(html: str, cfg: SiteConfig) -> dict | None:
         return None
 
     result = {"ean": str(d.get("barcode")) if d.get("barcode") else None}
+
+    product_classes = [c.get("name") for c in (d.get("productClasses") or []) if c.get("name")]
+    if product_classes:
+        result["certifications"] = product_classes
+
     meta_data = d.get("metaData", {})
     for section_name, section in meta_data.items():
         if section_name == "product_b2b" or not isinstance(section, dict):

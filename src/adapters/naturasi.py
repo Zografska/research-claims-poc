@@ -93,9 +93,6 @@ def _parse_naturasi_cards(html: str, cfg: SiteConfig) -> list[dict]:
         crumb_names = [c.get("name", "") for c in (p.get("breadCrumbs") or [])]
         vendor = p.get("vendor") or {}
 
-        # Listing responses only expose the ~170px thumb URL; the site's own "large" (~1200px)
-        # variant lives at the same path with "thumb" swapped for "large" (confirmed against the
-        # single-product detail response's explicit `media[].large` field).
         thumb_url = p.get("mediaURL", "")
         image_url = thumb_url.replace("/main/thumb/", "/main/large/") if thumb_url else ""
 

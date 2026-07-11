@@ -84,6 +84,9 @@ def _parse_coop_cards(html: str, cfg: SiteConfig) -> list[dict]:
         crumb_names = [c.get("name", "") for c in (p.get("breadCrumbs") or [])]
         vendor = p.get("vendor") or {}
 
+        thumb_url = p.get("mediaURL", "")
+        image_url = thumb_url.replace("/thumb/", "/large/") if thumb_url else ""
+
         products.append(
             {
                 "product_id": str(product_id),
@@ -94,7 +97,7 @@ def _parse_coop_cards(html: str, cfg: SiteConfig) -> list[dict]:
                 "category_l2": crumb_names[1] if len(crumb_names) > 1 else "",
                 "category_l3": crumb_names[2] if len(crumb_names) > 2 else "",
                 "base_price": None,
-                "image_url": p.get("mediaURL", ""),
+                "image_url": image_url,
                 "product_url": f"{cfg.base_url}/ebsn/api/products/{product_id}",
             }
         )
@@ -224,6 +227,11 @@ def _parse_coop_product_page(html: str, cfg: SiteConfig) -> dict | None:
         return None
 
     result = {"ean": str(d.get("barcode")) if d.get("barcode") else None}
+
+    product_classes = [c.get("name") for c in (d.get("productClasses") or []) if c.get("name")]
+    if product_classes:
+        result["certifications"] = product_classes
+
     result.update(_extract_coop_metadata_fields(d.get("metaData", {}) or {}))
     return result
 
