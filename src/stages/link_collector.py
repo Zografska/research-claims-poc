@@ -130,11 +130,14 @@ async def _fetch_category_products(
     by_category: dict[str, list],
     out_folder: Path,
     seen_eans: set,
-) -> list[dict]:
+) -> tuple[str, list[dict], float]:
+    cat_start = time.perf_counter()
     first_url = cfg.build_listing_url(cfg, category_id, 0)
-    html, _ = await fetch_html(client, first_url, pause)
+    async with sem:
+        html, _ = await fetch_html(client, first_url, pause)
+        await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
     if html is None:
-        return []
+        return category_id, [], time.perf_counter() - cat_start
 
     total = cfg.get_product_count(html)
     first_products = cfg.parse_cards(html, cfg)
@@ -153,7 +156,7 @@ async def _fetch_category_products(
         _dedup_extend(by_category[group_key], page_products, seen_eans)
         _flush(by_category, out_folder)
 
-    return by_category[group_key]
+    return category_id, by_category[group_key], time.perf_counter() - cat_start
 
 
 async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> Path:
@@ -176,17 +179,21 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
 
         sem = asyncio.Semaphore(cfg.concurrency)
 
-        for i, category_id in enumerate(categories, start=1):
-            cat_start = time.perf_counter()
-            products = await _fetch_category_products(
-                client, cfg, category_id, max_pages, sem, pause, by_category, out_folder, seen_eans
+        tasks = [
+            asyncio.create_task(
+                _fetch_category_products(
+                    client, cfg, category_id, max_pages, sem, pause, by_category, out_folder, seen_eans
+                )
             )
+            for category_id in categories
+        ]
+        for i, coro in enumerate(asyncio.as_completed(tasks), start=1):
+            category_id, products, cat_elapsed = await coro
             logging.info(
                 f"Category {i}/{len(categories)} '{category_id}' — {len(products)} products so far in its group "
-                f"| {fmt_duration(time.perf_counter() - cat_start)} total "
+                f"| {fmt_duration(cat_elapsed)} total "
                 f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
             )
-            await asyncio.sleep(random.uniform(*cfg.inter_request_delay))
 
     total_products = sum(len(v) for v in by_category.values())
     logging.info(f"Stage 1 complete — {total_products} total products → {out_folder}")
