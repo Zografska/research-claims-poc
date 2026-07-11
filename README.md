@@ -133,6 +133,52 @@ naturasi_main.py   ← entry point for NaturaSi
 
 Both stages can optionally post progress to a Discord webhook — run start, periodic checkpoints, completion, and failures/circuit-breaker events. Copy `.env.example` to `.env` and set `DISCORD_WEBHOOK_URL`; if it's unset, notifications are silently skipped.
 
+## Running on INDACO (SLURM)
+
+`slurm/*.sbatch` has one job script per site for running the pipeline on INDACO's cluster:
+
+```bash
+sbatch slurm/coop.sbatch
+squeue -u $USER
+```
+
+`submit_slurm_jobs.sh` submits all five in one go:
+
+```bash
+./submit_slurm_jobs.sh
+```
+
+Each job's `--output`/`--error` log is renamed to the project's own `DD.MM_HH` timestamp convention
+(e.g. `coop-11.07_23.out`) once it starts running.
+
+Build the venv on INDACO with `/usr/bin/python3.11` and `requirements-indaco.txt` (a copy of
+`requirements.txt` with `numpy`/`scipy` pinned to versions compatible with 3.11):
+
+```bash
+/usr/bin/python3.11 -m venv .venv
+.venv/bin/pip install -r requirements-indaco.txt
+.venv/bin/python -m playwright install chromium
+```
+
+Two requirements files exist because INDACO's login node has Python 3.12 available, but its
+compute nodes only go up to 3.11 (`/usr/bin/python3.11`, present on both, is the one to build the
+venv against). `requirements.txt` is frozen from a 3.12+ environment and pins `numpy==2.5.0` /
+`scipy==1.18.0`, both of which require Python ≥3.12 and fail to install on 3.11. `requirements-indaco.txt`
+is identical except for those two packages, pinned to the newest versions that support 3.11
+(`numpy==2.4.6`, `scipy==1.17.1`); every other package resolves to the exact same version in both
+files. Build the venv on INDACO with:
+
+```bash
+/usr/bin/python3.11 -m venv .venv
+.venv/bin/pip install -r requirements-indaco.txt
+.venv/bin/python -m playwright install chromium
+```
+
+A symlink named `python` pointing to a Python version that only exists on the login node (e.g. a
+venv built with `python3.12`) will silently fail with `python: command not found` the moment a
+job actually lands on a compute node, since the base interpreter it points to isn't there. Always
+build against `/usr/bin/python3.11` specifically since it's confirmed present on both.
+
 ## Development
 
 This repo uses [pre-commit](https://pre-commit.com) for linting/formatting (Ruff) and basic file hygiene checks.
