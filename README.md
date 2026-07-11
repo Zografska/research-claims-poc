@@ -64,21 +64,15 @@ Conad's Stage 1 always uses a real browser. Stage 2 can use either engine — se
 
 Stage 2 also includes a circuit breaker that pauses or aborts a run automatically when it detects signs of anti-bot blocking — see `--breaker-*` flags below.
 
-### Eurospin
+### Eurospin, Coop, and NaturaSi
 
-Same commands and arguments as Conad, using `eurospin_main.py`.
+Same commands and arguments as Conad, using `eurospin_main.py`, `coop_main.py`, or `naturasi_main.py`. All three run entirely over the `ebsn` JSON API rather than scraping rendered HTML: categories are discovered from a sitemap, filtered to leaf-only slugs, resolved to numeric category IDs, then probed to drop empty categories (account pages, region pages, etc.) automatically. Like Carrefour, `--pages` applies per category rather than globally.
 
-Eurospin runs entirely over its own JSON API (`ebsn`, the same backend platform Coop uses) rather than scraping rendered HTML — both stages use `--fetch-mode http`-equivalent behavior by default. Categories are discovered from `category.xml`, filtered to leaf categories only, and empty/non-product categories (account pages, region pages, etc.) are dropped automatically.
-
-Like Carrefour, `--pages` applies per category.
-
-### Coop
-
-Same commands and arguments as Conad, using `coop_main.py`.
-
-Coop runs entirely over the `ebsn` JSON API (the same backend platform Eurospin uses). Categories are discovered from a sitemap (`sitemap/category.xml`), filtered to leaf categories only, then resolved to numeric category IDs and probed to drop empty categories — the same two-step pattern as Eurospin.
-
-Like Carrefour and Eurospin, `--pages` applies per category. Coop exposes no price to anonymous requests, so `base_price` is always `null` in the output.
+| Site | Category ID param | Notes |
+|---|---|---|
+| Eurospin | `parent_category_id` | |
+| Coop | `parent_category_id` | No price for anonymous requests, so `base_price` is always `null` |
+| NaturaSi | `category_id` | Every request also needs a `store_id` param; product detail is fetched by slug, not by numeric ID |
 
 ### Output
 
@@ -113,13 +107,9 @@ Each product record contains: `product_id`, `ean`, `scraped_at`, `code`, `name`,
 
 **Carrefour — Stage 2** writes to `raw_data/carrefour/DD.MM_HH/` in the same layout as Conad, plus the site's own claims fields verbatim (`C4_SalesDenomination`, `labeledIngredients`, `nutritionInfo`, `C4_Allergens`, `C4_Origin`, etc.).
 
-**Eurospin — Stage 1** writes one JSON file per top-level category under `link_collection/eurospin/DD.MM_HH/` (e.g. `bevande.json`), named after the category as shown on the site rather than its numeric ID, deduplicated by `ean` as it writes.
+**Eurospin, Coop, and NaturaSi — Stage 1** each write one JSON file per category under `link_collection/{site}/DD.MM_HH/`, named after the category as shown on the site rather than its numeric ID.
 
-**Eurospin — Stage 2** writes to `raw_data/eurospin/DD.MM_HH/` in the same layout, with every field from the site's product metadata (description, technical specs, allergens, nutrition, certifications) flattened into plain keys.
-
-**Coop — Stage 1** writes one JSON file per category under `link_collection/coop/DD.MM_HH/`, following the same shape as Eurospin's Stage 1 output.
-
-**Coop — Stage 2** writes to `raw_data/coop/DD.MM_HH/` in the same layout, with claims fields parsed from the site's raw HTML metadata fragments (tables, lists, or plain text) into plain keys.
+**Eurospin, Coop, and NaturaSi — Stage 2** write to `raw_data/{site}/DD.MM_HH/` in the same layout. Eurospin and NaturaSi flatten the site's product metadata (description, technical specs, allergens, nutrition, certifications) into plain keys; Coop's claims arrive as raw HTML fragments (tables, lists, plain text) parsed dynamically into the same shape. NaturaSi also adds a `certifications` field for organic/vegan/allergen-free style badges.
 
 `run_summary.json` is written after every product and updated on completion with start time, end time, duration, and per-category counts. `status` is `in_progress` while running, `complete` on a normal finish, or `circuit_broken` if the breaker aborted the run.
 
@@ -136,6 +126,7 @@ conad_main.py      ← entry point for Conad
 carrefour_main.py  ← entry point for Carrefour
 eurospin_main.py   ← entry point for Eurospin
 coop_main.py       ← entry point for Coop
+naturasi_main.py   ← entry point for NaturaSi
 ```
 
 ## Notifications
