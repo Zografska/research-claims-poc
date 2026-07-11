@@ -5,6 +5,7 @@ import sys
 def setup_logger():
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
     formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
