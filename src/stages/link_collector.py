@@ -200,7 +200,7 @@ async def _collect_links_http(cfg: SiteConfig, max_pages: int | None = None) -> 
                 f"| {fmt_duration(cat_elapsed)} total "
                 f"| uptime {fmt_duration(time.perf_counter() - run_start)}"
             )
-            if i % checkpoint_interval == 0:
+            if i % checkpoint_interval == 0 and len(categories) - i >= checkpoint_interval:
                 asyncio.create_task(
                     notify_discord(
                         f"📊 **{site} — Stage 1 health check**\n"
