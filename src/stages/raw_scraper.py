@@ -13,6 +13,7 @@ from crawl4ai import AsyncWebCrawler, CrawlerRunConfig
 
 from src.adapters.base import SiteConfig
 from src.utils.browser import make_browser_config
+from src.utils.discord import notify_discord
 from src.utils.http_client import fetch_html, make_http_client
 from src.utils.storage import timestamped_folder, write_json
 from src.utils.time import fmt_duration, now_rome
@@ -151,6 +152,7 @@ async def scrape_raw(
 
     mode = cfg.raw_fetch_mode or cfg.fetch_mode
     out_folder = resume_folder if resume_folder else timestamped_folder(RAW_DATA_DIR, cfg.name)
+    site = cfg.name.capitalize()
     run_start = time.perf_counter()
     sem = asyncio.Semaphore(cfg.concurrency)
     pause = asyncio.Event()
@@ -198,6 +200,7 @@ async def scrape_raw(
 
     global_total = sum(len(todo) for _, _, _, _, todo in category_plan)
     logging.info(f"Total products to scrape this run: {global_total}")
+    await notify_discord(f"▶️ **{site} — Stage 2 started**\n{global_total} products planned\n→ `{out_folder}`", "start")
 
     total_ok = existing_summary.get("total_ok", 0)
     total_fail = existing_summary.get("total_failed", 0)
@@ -309,6 +312,16 @@ async def scrape_raw(
                         breaker_action, breaker_message = breaker_result
                         logging.warning(f"Circuit breaker tripped: {breaker_message}")
 
+                if (total_ok + total_fail) % 1000 == 0:
+                    asyncio.create_task(
+                        notify_discord(
+                            f"📊 **{site} — Stage 2 checkpoint**\n"
+                            f"{total_ok + total_fail}/{global_total} — {total_ok} ok, {total_fail} failed "
+                            f"| *uptime {fmt_duration(time.perf_counter() - run_start)}*",
+                            "checkpoint",
+                        )
+                    )
+
                 write_json(
                     summary_path,
                     {
@@ -350,10 +363,23 @@ async def scrape_raw(
                     },
                 )
                 logging.error(f"Circuit breaker aborted the run → {out_folder}. Resume later with --resume.")
+                await notify_discord(
+                    f"🛑 **{site} — Circuit breaker aborted Stage 2**\n"
+                    f"{breaker_message}\n"
+                    f"{total_ok} ok, {total_fail} failed → `{out_folder}`\n"
+                    f"*Resume later with `--resume`*",
+                    "error",
+                )
                 return out_folder
 
             if breaker_action == "pause":
                 logging.warning(f"Circuit breaker pausing for {cfg.breaker_pause_minutes} minutes...")
+                await notify_discord(
+                    f"⏸️ **{site} — Circuit breaker paused**\n"
+                    f"{breaker_message}\n"
+                    f"Resuming in *{cfg.breaker_pause_minutes} min*",
+                    "warning",
+                )
                 await asyncio.sleep(cfg.breaker_pause_minutes * 60)
                 logging.info("Circuit breaker pause finished, resuming.")
 
@@ -371,5 +397,11 @@ async def scrape_raw(
     logging.info(
         f"Stage 2 complete → {out_folder} | "
         f"{total_ok} ok, {total_fail} failed | {fmt_duration(time.perf_counter() - run_start)}"
+    )
+    await notify_discord(
+        f"✅ **{site} — Stage 2 complete**\n"
+        f"{total_ok} ok, {total_fail} failed | *{fmt_duration(time.perf_counter() - run_start)}*\n"
+        f"→ `{out_folder}`",
+        "success",
     )
     return out_folder

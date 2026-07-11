@@ -3,11 +3,16 @@ import json
 import logging
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from src.adapters.base import SiteConfig
 from src.stages.link_collector import collect_links
 from src.stages.raw_scraper import scrape_raw
+from src.utils.discord import notify_discord
 from src.utils.logger import setup_logger
 from src.utils.parser import get_parser
+
+load_dotenv()
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
@@ -53,7 +58,11 @@ async def run_main(site_name: str, cfg: SiteConfig) -> None:
     stages = set(args.stage) if args.stage else {1, 2}
 
     if 1 in stages:
-        await collect_links(cfg, max_pages=args.pages)
+        try:
+            await collect_links(cfg, max_pages=args.pages)
+        except Exception as e:
+            await notify_discord(f"❌ **{site_name.capitalize()} — Stage 1 failed**\n{e}", "error")
+            raise
 
     if 2 in stages:
         links_folder = _resolve_links_folder(args.links, link_collection_dir)
@@ -74,12 +83,16 @@ async def run_main(site_name: str, cfg: SiteConfig) -> None:
         if args.breaker_pause_minutes:
             overrides["breaker_pause_minutes"] = args.breaker_pause_minutes
         run_cfg = dataclasses.replace(cfg, **overrides) if overrides else cfg
-        await scrape_raw(
-            run_cfg,
-            links_folder,
-            sampling_config=sampling_config,
-            fallback=args.products,
-            seed=args.seed,
-            use_max=args.max,
-            resume_folder=_resolve_resume_folder(args.resume, raw_data_dir),
-        )
+        try:
+            await scrape_raw(
+                run_cfg,
+                links_folder,
+                sampling_config=sampling_config,
+                fallback=args.products,
+                seed=args.seed,
+                use_max=args.max,
+                resume_folder=_resolve_resume_folder(args.resume, raw_data_dir),
+            )
+        except Exception as e:
+            await notify_discord(f"❌ **{site_name.capitalize()} — Stage 2 failed**\n{e}", "error")
+            raise

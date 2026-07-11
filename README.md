@@ -138,6 +138,10 @@ eurospin_main.py   ← entry point for Eurospin
 coop_main.py       ← entry point for Coop
 ```
 
+## Notifications
+
+Both stages can optionally post progress to a Discord webhook — run start, periodic checkpoints, completion, and failures/circuit-breaker events. Copy `.env.example` to `.env` and set `DISCORD_WEBHOOK_URL`; if it's unset, notifications are silently skipped.
+
 ## Development
 
 This repo uses [pre-commit](https://pre-commit.com) for linting/formatting (Ruff) and basic file hygiene checks.
