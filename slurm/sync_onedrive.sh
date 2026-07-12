@@ -3,7 +3,7 @@ set -uo pipefail
 
 SITE="$1"
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 
 set -a
 source .env 2>/dev/null || true
@@ -48,12 +48,20 @@ for run_dir in raw_data/${SITE}/*/; do
         continue
     fi
     run_ok=1
-    for img_dir in "${run_dir}"*/; do
+    img_dirs=("${run_dir}"*/)
+    total_categories=${#img_dirs[@]}
+    checkpoint_interval=$(( total_categories / 5 > 0 ? total_categories / 5 : 1 ))
+    i=0
+    for img_dir in "${img_dirs[@]}"; do
         [ -d "$img_dir" ] || continue
+        i=$((i + 1))
         category=$(basename "$img_dir")
         log="logs/rclone-sync-${SITE}-${ts}-${category}.log"
         if ! rclone move "$img_dir" "ONEDRIVE:research-claims-data/raw_data/${SITE}/${ts}/${category}" --transfers 4 --checkers 16 --tpslimit 10 --retries 5 --low-level-retries 20 --delete-empty-src-dirs --log-file="$log" --log-level INFO; then
             run_ok=0
+        fi
+        if [ $((i % checkpoint_interval)) -eq 0 ]; then
+            notify_discord "📊 **${SITE} — ${ts}**: ${i}/${total_categories} categories synced" "checkpoint"
         fi
     done
 

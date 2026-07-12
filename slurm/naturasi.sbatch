@@ -20,4 +20,4 @@ mv "logs/naturasi-$SLURM_JOB_ID.err" "logs/naturasi-$STAMP.err"
 
 python naturasi_main.py --concurrency 40
 
-./sync_onedrive.sh naturasi
+./slurm/sync_onedrive.sh naturasi

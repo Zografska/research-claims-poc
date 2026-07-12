@@ -86,10 +86,10 @@ sbatch slurm/coop.sbatch
 squeue -u $USER
 ```
 
-`submit_slurm_jobs.sh` submits all five in one go:
+`submit_scrape_jobs.sh` submits all five in one go:
 
 ```bash
-./submit_slurm_jobs.sh
+./submit_scrape_jobs.sh
 ```
 
 Each job's `--output`/`--error` log is renamed to the project's own `DD.MM_HH` timestamp convention (e.g. `coop-11.07_23.out`) once it starts running.
@@ -99,6 +99,12 @@ Each site's job also syncs its scraped images to OneDrive once it finishes, via 
 ```bash
 sbatch slurm/sync.sbatch coop   # sync just one site
 sbatch slurm/sync.sbatch        # sync all five sites, one after another
+```
+
+`submit_sync_jobs.sh` submits all five as separate jobs instead, so they run in parallel rather than one after another:
+
+```bash
+./submit_sync_jobs.sh
 ```
 
 A weekly cron job on INDACO submits all five scraping jobs automatically.

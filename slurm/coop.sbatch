@@ -20,4 +20,4 @@ mv "logs/coop-$SLURM_JOB_ID.err" "logs/coop-$STAMP.err"
 
 python coop_main.py --concurrency 40
 
-./sync_onedrive.sh coop
+./slurm/sync_onedrive.sh coop

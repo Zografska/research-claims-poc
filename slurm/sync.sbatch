@@ -20,5 +20,5 @@ mv "logs/sync-$SLURM_JOB_ID.out" "logs/${LOGNAME}.out"
 mv "logs/sync-$SLURM_JOB_ID.err" "logs/${LOGNAME}.err"
 
 for SITE in $SITES; do
-    ./sync_onedrive.sh "$SITE"
+    ./slurm/sync_onedrive.sh "$SITE"
 done
