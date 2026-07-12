@@ -19,7 +19,7 @@ notify_discord() {
 import json, urllib.request, sys
 colors = {'start': 0x3B82F6, 'checkpoint': 0x22D3EE, 'success': 0x22C55E, 'warning': 0xF59E0B, 'error': 0xEF4444}
 payload = {'embeds': [{'description': sys.argv[1], 'color': colors.get(sys.argv[2])}]}
-req = urllib.request.Request(sys.argv[3], data=json.dumps(payload).encode(), headers={'Content-Type': 'application/json'})
+req = urllib.request.Request(sys.argv[3], data=json.dumps(payload).encode(), headers={'Content-Type': 'application/json', 'User-Agent': 'Mozilla/5.0'})
 try:
     urllib.request.urlopen(req, timeout=10)
 except Exception as e:
