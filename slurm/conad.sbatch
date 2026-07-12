@@ -19,3 +19,5 @@ mv "logs/conad-$SLURM_JOB_ID.out" "logs/conad-$STAMP.out"
 mv "logs/conad-$SLURM_JOB_ID.err" "logs/conad-$STAMP.err"
 
 python conad_main.py --concurrency 1 --breaker-window-minutes 15 --breaker-pause-minutes 20
+
+./sync_onedrive.sh conad

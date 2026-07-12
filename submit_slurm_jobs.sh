@@ -3,6 +3,6 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-for site in coop carrefour eurospin naturasi conad; do
+for site in coop carrefour eurospin naturasi; do
     sbatch "slurm/${site}.sbatch"
 done

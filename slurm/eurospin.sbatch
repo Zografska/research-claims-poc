@@ -19,3 +19,5 @@ mv "logs/eurospin-$SLURM_JOB_ID.out" "logs/eurospin-$STAMP.out"
 mv "logs/eurospin-$SLURM_JOB_ID.err" "logs/eurospin-$STAMP.err"
 
 python eurospin_main.py --concurrency 40
+
+./sync_onedrive.sh eurospin

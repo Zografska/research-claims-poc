@@ -19,3 +19,5 @@ mv "logs/carrefour-$SLURM_JOB_ID.out" "logs/carrefour-$STAMP.out"
 mv "logs/carrefour-$SLURM_JOB_ID.err" "logs/carrefour-$STAMP.err"
 
 python carrefour_main.py --concurrency 15 --breaker-rate-limited-threshold 10 --breaker-window-minutes 10 --breaker-pause-minutes 10
+
+./sync_onedrive.sh carrefour
