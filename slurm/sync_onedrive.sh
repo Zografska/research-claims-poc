@@ -34,8 +34,13 @@ notify_discord "▶️ **${SITE} — OneDrive sync started**" "start"
 total_ok=0
 total_fail=0
 
-for run_dir in raw_data/${SITE}/*/; do
+run_dirs=(raw_data/${SITE}/*/)
+total_runs=${#run_dirs[@]}
+run_idx=0
+
+for run_dir in "${run_dirs[@]}"; do
     [ -d "$run_dir" ] || continue
+    run_idx=$((run_idx + 1))
     ts=$(basename "$run_dir")
     summary="${run_dir}run_summary.json"
     if [ -f "$summary" ]; then
@@ -67,16 +72,18 @@ for run_dir in raw_data/${SITE}/*/; do
 
     if [ $run_ok -eq 1 ]; then
         total_ok=$((total_ok + 1))
-        notify_discord "✅ **${SITE} — ${ts} images synced to OneDrive**" "checkpoint"
+        if [ $run_idx -lt $total_runs ]; then
+            notify_discord "✅ **${SITE} — ${ts} images synced to OneDrive**" "checkpoint"
+        fi
     else
         total_fail=$((total_fail + 1))
-        notify_discord "⚠️ **${SITE} — ${ts} some image folders failed to sync**\nCheck \`logs/rclone-sync-${SITE}-${ts}-*.log\`" "warning"
+        notify_discord "⚠️ **${SITE} — ${ts} some image folders failed to sync**"$'\n'"Check \`logs/rclone-sync-${SITE}-${ts}-*.log\`" "warning"
     fi
 done
 
 if [ $total_fail -eq 0 ]; then
-    notify_discord "✅ **${SITE} — OneDrive sync complete**\n${total_ok} run(s) synced, 0 failures" "success"
+    notify_discord "✅ **${SITE} — OneDrive sync complete**"$'\n'"${total_ok} run(s) synced, 0 failures" "success"
 else
-    notify_discord "⚠️ **${SITE} — OneDrive sync finished with failures**\n${total_ok} succeeded, ${total_fail} failed" "warning"
+    notify_discord "⚠️ **${SITE} — OneDrive sync finished with failures**"$'\n'"${total_ok} succeeded, ${total_fail} failed" "warning"
     exit 1
 fi
