@@ -3,7 +3,7 @@
 #SBATCH --partition=light
 #SBATCH --account=evaluation
 #SBATCH --qos=light
-#SBATCH --time=04:00:00
+#SBATCH --time=10:00:00
 #SBATCH --cpus-per-task=2
 #SBATCH --mem=2G
 #SBATCH --output=/home/users/alireza.mahmoudian.stud/research-claims-poc/logs/sync-%j.out
